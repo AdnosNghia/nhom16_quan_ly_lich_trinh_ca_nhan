@@ -1,0 +1,229 @@
+import 'package:flutter/material.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_dimensions.dart';
+import '../../../core/constants/app_strings.dart';
+
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
+
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  final PageController _controller = PageController();
+  int _currentPage = 0;
+
+  final List<_OnboardingItem> _items = [
+    _OnboardingItem(
+      icon: Icons.auto_awesome,
+      title: 'Lập lịch thông minh',
+      desc:
+          'Dễ dàng quản lý thời gian với các gợi ý từ AI. Tổ chức cuộc sống với lịch trình linh hoạt theo nhu cầu của bạn.',
+    ),
+    _OnboardingItem(
+      icon: Icons.notifications_active,
+      title: 'Nhắc nhở thông minh',
+      desc:
+          'Không bao giờ bỏ lỡ sự kiện quan trọng với hệ thống nhắc nhở thông minh, tùy chỉnh theo lịch trình của bạn.',
+    ),
+    _OnboardingItem(
+      icon: Icons.analytics,
+      title: 'Phân tích hiệu suất',
+      desc:
+          'Theo dõi tiến độ công việc và thói quen hàng ngày với biểu đồ trực quan và báo cáo chi tiết.',
+    ),
+  ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.marginMobile,
+                vertical: AppDimensions.md,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    AppStrings.appName,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushReplacementNamed('/login');
+                    },
+                    child: Text(
+                      AppStrings.skip,
+                      style: const TextStyle(
+                        color: AppColors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: PageView.builder(
+                controller: _controller,
+                itemCount: _items.length,
+                onPageChanged: (index) {
+                  setState(() => _currentPage = index);
+                },
+                itemBuilder: (context, index) {
+                  final item = _items[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppDimensions.gutter,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 280,
+                          height: 280,
+                          decoration: BoxDecoration(
+                            color: AppColors.surfaceContainerLow,
+                            borderRadius: BorderRadius.circular(
+                                AppDimensions.radiusXl),
+                          ),
+                          child: Icon(
+                            item.icon,
+                            size: 120,
+                            color: AppColors.primary.withValues(alpha: 0.3),
+                          ),
+                        ),
+                        const SizedBox(height: AppDimensions.xl),
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: AppDimensions.md),
+                        Text(
+                          item.desc,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: AppColors.onSurfaceVariant,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _items.length,
+                (index) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: _currentPage == index ? 32 : 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: _currentPage == index
+                        ? AppColors.secondaryContainer
+                        : AppColors.surfaceContainerHighest,
+                    borderRadius:
+                        BorderRadius.circular(AppDimensions.radiusFull),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.xl),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppDimensions.gutter,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_currentPage == _items.length - 1) {
+                      Navigator.of(context)
+                          .pushReplacementNamed('/login');
+                    } else {
+                      _controller.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.secondaryContainer,
+                    foregroundColor: AppColors.onTertiaryContainer,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(AppDimensions.radiusXl),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _currentPage == _items.length - 1
+                            ? 'Bắt đầu'
+                            : AppStrings.next,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      if (_currentPage < _items.length - 1)
+                        const Icon(Icons.arrow_forward),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppDimensions.lg),
+            Text(
+              'Bước ${_currentPage + 1} trên ${_items.length}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.outlineVariant,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.lg),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _OnboardingItem {
+  final IconData icon;
+  final String title;
+  final String desc;
+
+  const _OnboardingItem({
+    required this.icon,
+    required this.title,
+    required this.desc,
+  });
+}
