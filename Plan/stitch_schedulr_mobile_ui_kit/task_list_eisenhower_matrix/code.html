@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Schedulr - Ma trận Eisenhower</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#302f39",
+                    "inverse-primary": "#c4c0ff",
+                    "secondary-fixed": "#ffd9dd",
+                    "surface-dark": "#1E1E2E",
+                    "primary-dark-accent": "#7B74FF",
+                    "background": "#fcf8ff",
+                    "secondary": "#b0284b",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#f0ecf9",
+                    "on-secondary-fixed-variant": "#8f0935",
+                    "on-error": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#914800",
+                    "surface-dim": "#dcd8e5",
+                    "on-background": "#1b1b24",
+                    "on-primary-fixed": "#100069",
+                    "on-tertiary-fixed-variant": "#713700",
+                    "primary-container": "#675df9",
+                    "on-surface": "#1b1b24",
+                    "secondary-fixed-dim": "#ffb2bc",
+                    "background-light": "#F8F9FA",
+                    "primary-fixed": "#e3dfff",
+                    "surface-container-highest": "#e4e1ee",
+                    "surface-variant": "#e4e1ee",
+                    "surface-tint": "#4f44e2",
+                    "surface": "#fcf8ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-container": "#fffbff",
+                    "on-tertiary-fixed": "#301400",
+                    "tertiary-fixed-dim": "#ffb785",
+                    "text-primary-dark": "#E8E8F0",
+                    "primary-fixed-dim": "#c4c0ff",
+                    "on-primary-container": "#fffbff",
+                    "text-secondary-light": "#6C757D",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#eae6f3",
+                    "tertiary-container": "#b65c00",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#ffdcc6",
+                    "outline": "#777587",
+                    "text-primary-light": "#1A1A2E",
+                    "on-surface-variant": "#464555",
+                    "secondary-container": "#fd6483",
+                    "surface-bright": "#fcf8ff",
+                    "primary": "#4d41df",
+                    "inverse-on-surface": "#f3effc",
+                    "surface-container-low": "#f6f2ff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#400012",
+                    "on-secondary-container": "#670023",
+                    "surface-light": "#FFFFFF",
+                    "on-primary-fixed-variant": "#3622ca",
+                    "outline-variant": "#c7c4d8",
+                    "background-dark": "#121212"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "8px",
+                    "gutter": "16px",
+                    "xs": "4px",
+                    "xxl": "48px",
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .matrix-container {
+            height: calc(100vh - 128px);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e4e1ee;
+            border-radius: 10px;
+        }
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-background fixed top-0 w-full z-40">
+<div class="flex justify-between items-center px-margin-mobile h-16 w-full max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden">
+<img alt="User Profile Picture" data-alt="A high-quality professional portrait of a young woman with a friendly expression, set against a soft-focus office background. The lighting is bright and natural, reflecting a modern corporate aesthetic. Her attire is professional yet approachable, fitting the Indigo and Coral brand palette of Schedulr." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxUmrHG7PKJVkm58p3xVfq3f6kM-hy-JIoSnhYvNky9-kGFaH5iyK43IdOfKxElAdE5X3Guiolu0FKajKbWacWc8mPUsNk5W5sW8ovWh_kA45YUsCZPo0s_qzlNZ96EvDKLSiBCSNvxzSGzDyICINWhNlAa8HjTsHh1xP4cCcww-m4yWUCwfFvYlvWEu29WOW58pMQG95oxnIOOZpGAJujU1FfZmS14YClmKzpfIACccnFYRfrQi2Ay_nUslbC1a8BcuN6DKItpQ0"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary">Schedulr</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content: Eisenhower Matrix -->
+<main class="pt-20 pb-24 px-4 max-w-screen-xl mx-auto">
+<!-- Header & Matrix Guide -->
+<div class="mb-6">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-1">Ma trận Eisenhower</h2>
+<p class="font-body-md text-on-surface-variant">Ưu tiên các công việc dựa trên mức độ khẩn cấp và quan trọng.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 matrix-container">
+<!-- Quadrant 1: Làm ngay (Urgent & Important) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl border border-primary/10 overflow-hidden shadow-sm">
+<div class="p-4 bg-primary text-on-primary flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined font-bold">bolt</span>
+<h3 class="font-headline-md text-headline-md !text-lg">Làm ngay</h3>
+</div>
+<span class="font-label-sm px-2 py-1 bg-white/20 rounded-full">4 Công việc</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-primary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-primary flex items-center justify-center active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-xs text-primary hidden group-hover:block">check</span>
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Hoàn thiện đề xuất dự án Q3</p>
+<p class="font-label-sm text-on-surface-variant">Hết hạn trong 2 giờ</p>
+</div>
+</div>
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-primary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-primary hidden">check</span>
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Cuộc gọi khẩn cấp từ khách hàng</p>
+<p class="font-label-sm text-on-surface-variant">Đã lên lịch lúc 3:00 chiều</p>
+</div>
+</div>
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-primary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-primary hidden">check</span>
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Server Migration Prep</p>
+<p class="font-label-sm text-on-surface-variant">Critical Infrastructure</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quadrant 2: Lên lịch (Not Urgent but Important) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl border border-secondary/10 overflow-hidden shadow-sm">
+<div class="p-4 bg-secondary text-on-secondary flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">calendar_month</span>
+<h3 class="font-headline-md text-headline-md !text-lg">Lên lịch</h3>
+</div>
+<span class="font-label-sm px-2 py-1 bg-white/20 rounded-full">2 Công việc</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-secondary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-secondary flex items-center justify-center">
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Đánh giá tăng trưởng hàng tuần</p>
+<p class="font-label-sm text-on-surface-variant">Mỗi Thứ Sáu lúc 4 giờ chiều</p>
+</div>
+</div>
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-secondary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-secondary flex items-center justify-center">
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Tiệc tối giao lưu</p>
+<p class="font-label-sm text-on-surface-variant">Đã lên lịch vào Thứ Ba tới</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quadrant 3: Ủy thác (Urgent but Not Important) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl border border-tertiary/10 overflow-hidden shadow-sm">
+<div class="p-4 bg-tertiary text-on-tertiary flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">group</span>
+<h3 class="font-headline-md text-headline-md !text-lg">Ủy thác</h3>
+</div>
+<span class="font-label-sm px-2 py-1 bg-white/20 rounded-full">3 Công việc</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-tertiary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-tertiary flex items-center justify-center">
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Đặt vé du lịch cho Hội chợ</p>
+<p class="font-label-sm text-on-surface-variant">Đã giao cho nhóm Hành chính</p>
+</div>
+</div>
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-tertiary bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-tertiary flex items-center justify-center">
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface font-semibold">Phản hồi mạng xã hội</p>
+<p class="font-label-sm text-on-surface-variant">Chuyển cho Nhân viên Marketing</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quadrant 4: Loại bỏ (Not Urgent & Not Important) -->
+<section class="flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-4 bg-surface-container-highest text-on-surface-variant flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">delete</span>
+<h3 class="font-headline-md text-headline-md !text-lg">Loại bỏ</h3>
+</div>
+<span class="font-label-sm px-2 py-1 bg-on-surface-variant/10 rounded-full">1 Công việc</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+<div class="group flex items-center gap-3 p-3 rounded-lg border-l-4 border-outline bg-surface transition-all hover:bg-surface-container-low shadow-sm">
+<button class="w-5 h-5 rounded border-2 border-outline flex items-center justify-center">
+</button>
+<div class="flex-1">
+<p class="font-body-md text-on-surface-variant line-through">Dọn dẹp công việc ưu tiên thấp</p>
+<p class="font-label-sm text-on-surface-variant">Low priority cleanup</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- FAB -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center active:scale-95 duration-150 z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest dark:bg-surface-dark shadow-[0_-4px_8px_rgba(0,0,0,0.05)] rounded-t-xl flex justify-around items-center px-4 py-2 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-sm text-label-sm">Trang chủ</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-sm text-label-sm">Lịch</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-3 py-1.5 scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-sm text-label-sm">Công việc</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-label-sm text-label-sm">Thống kê</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-sm text-label-sm">Cài đặt</span>
+</a>
+</nav>
+</body></html>

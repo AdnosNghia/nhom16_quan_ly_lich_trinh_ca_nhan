@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494276483402",
+    "project_id": "schedulr-app-af569",
+    "storage_bucket": "schedulr-app-af569.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494276483402:android:1720733cc68e1ae1eec9b3",
+        "android_client_info": {
+          "package_name": "com.example.nhom16_quanlylichtrinhcanhan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCs1YUkHKlNw0eipcnU8T10YQMQ-DvLGag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

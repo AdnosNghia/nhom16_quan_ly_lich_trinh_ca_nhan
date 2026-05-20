@@ -1,5 +1,7 @@
+import 'subtask.dart';
+
 class Event {
-  final int id;
+  final String id;
   final String title;
   final String? description;
   final DateTime startTime;
@@ -12,9 +14,10 @@ class Event {
   final String? recurrenceRule;
   final List<int> reminderMinutes;
   final bool isCompleted;
+  final List<SubTask> subtasks;
 
   const Event({
-    this.id = 0,
+    this.id = '',
     required this.title,
     this.description,
     required this.startTime,
@@ -27,35 +30,40 @@ class Event {
     this.recurrenceRule,
     this.reminderMinutes = const [15],
     this.isCompleted = false,
+    this.subtasks = const [],
   });
-}
 
-class Category {
-  final int id;
-  final String name;
-  final int colorHex;
-  final String iconCode;
-
-  const Category({
-    this.id = 0,
-    required this.name,
-    required this.colorHex,
-    this.iconCode = '',
-  });
-}
-
-class SubTask {
-  final int id;
-  final int eventId;
-  final String title;
-  final bool isCompleted;
-  final int sortOrder;
-
-  const SubTask({
-    this.id = 0,
-    this.eventId = 0,
-    required this.title,
-    this.isCompleted = false,
-    this.sortOrder = 0,
-  });
+  Event copyWith({
+    String? id,
+    String? title,
+    String? description,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? location,
+    String? categoryId,
+    int? colorHex,
+    bool? isAllDay,
+    bool? isRecurring,
+    String? recurrenceRule,
+    List<int>? reminderMinutes,
+    bool? isCompleted,
+    List<SubTask>? subtasks,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      location: location ?? this.location,
+      categoryId: categoryId ?? this.categoryId,
+      colorHex: colorHex ?? this.colorHex,
+      isAllDay: isAllDay ?? this.isAllDay,
+      isRecurring: isRecurring ?? this.isRecurring,
+      recurrenceRule: recurrenceRule ?? this.recurrenceRule,
+      reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+      isCompleted: isCompleted ?? this.isCompleted,
+      subtasks: subtasks ?? this.subtasks,
+    );
+  }
 }

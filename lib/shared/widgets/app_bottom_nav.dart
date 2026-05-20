@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
+import '../../core/helpers/responsive_helper.dart';
 
 class AppBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -48,39 +49,44 @@ class AppBottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: List.generate(items.length, (index) {
           final isActive = currentIndex == index;
-          return GestureDetector(
-            onTap: () => onTap(index),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.sm + 4,
-                vertical: AppDimensions.xs + 2,
-              ),
-              decoration: BoxDecoration(
-                color: isActive ? AppColors.primaryContainer : Colors.transparent,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isActive ? items[index].$2 : items[index].$1,
-                    color: isActive
-                        ? AppColors.onPrimaryContainer
-                        : AppColors.onSurfaceVariant,
-                    size: 24,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    items[index].$3,
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onTap(index),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.xs,
+                  vertical: AppDimensions.xs + 2,
+                ),
+                decoration: BoxDecoration(
+                  color: isActive ? AppColors.primaryContainer : Colors.transparent,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      isActive ? items[index].$2 : items[index].$1,
                       color: isActive
                           ? AppColors.onPrimaryContainer
                           : AppColors.onSurfaceVariant,
+                      size: ResponsiveHelper.iconSize(context, 24),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        items[index].$3,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.scaleFont(context, 11),
+                          fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
+                          color: isActive
+                              ? AppColors.onPrimaryContainer
+                              : AppColors.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

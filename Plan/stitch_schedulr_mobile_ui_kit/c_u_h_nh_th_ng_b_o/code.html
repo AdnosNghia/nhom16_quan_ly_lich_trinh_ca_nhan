@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cấu hình thông báo - Schedulr</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#302f39",
+                    "background-light": "#F8F9FA",
+                    "surface-variant": "#e4e1ee",
+                    "error": "#ba1a1a",
+                    "primary-fixed-dim": "#c4c0ff",
+                    "on-surface": "#1b1b24",
+                    "on-primary": "#ffffff",
+                    "background": "#fcf8ff",
+                    "primary-dark-accent": "#7B74FF",
+                    "on-surface-variant": "#464555",
+                    "on-background": "#1b1b24",
+                    "surface-light": "#FFFFFF",
+                    "on-secondary-fixed": "#400012",
+                    "surface-tint": "#4f44e2",
+                    "primary-container": "#675df9",
+                    "surface-dark": "#1E1E2E",
+                    "tertiary-fixed": "#ffdcc6",
+                    "background-dark": "#121212",
+                    "primary": "#4d41df",
+                    "inverse-primary": "#c4c0ff",
+                    "text-primary-light": "#1A1A2E",
+                    "on-tertiary-fixed-variant": "#713700",
+                    "surface-bright": "#fcf8ff",
+                    "on-secondary": "#ffffff",
+                    "primary-fixed": "#e3dfff",
+                    "on-primary-fixed": "#100069",
+                    "on-tertiary-container": "#fffbff",
+                    "tertiary-fixed-dim": "#ffb785",
+                    "outline": "#777587",
+                    "surface-container-low": "#f6f2ff",
+                    "on-primary-container": "#fffbff",
+                    "tertiary-container": "#b65c00",
+                    "error-container": "#ffdad6",
+                    "surface": "#fcf8ff",
+                    "surface-container-high": "#eae6f3",
+                    "text-secondary-light": "#6C757D",
+                    "outline-variant": "#c7c4d8",
+                    "tertiary": "#914800",
+                    "inverse-on-surface": "#f3effc",
+                    "on-secondary-fixed-variant": "#8f0935",
+                    "secondary-fixed": "#ffd9dd",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dcd8e5",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container": "#f0ecf9",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#670023",
+                    "secondary-container": "#fd6483",
+                    "secondary-fixed-dim": "#ffb2bc",
+                    "surface-container-highest": "#e4e1ee",
+                    "on-primary-fixed-variant": "#3622ca",
+                    "secondary": "#b0284b",
+                    "on-tertiary-fixed": "#301400",
+                    "text-primary-dark": "#E8E8F0"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "xxl": "48px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "base": "4px",
+                    "lg": "24px",
+                    "xl": "32px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                    "headline-lg": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["22px", {"lineHeight": "28px", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom toggle switch styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            background-color: #ffffff;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4d41df;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="bg-background dark:bg-background-dark fixed top-0 left-0 w-full z-40">
+<div class="flex justify-between items-center px-margin-mobile h-16 w-full max-w-screen-xl mx-auto">
+<div class="flex items-center gap-3">
+<button class="hover:bg-surface-container-low dark:hover:bg-surface-dark transition-colors p-2 rounded-full active:scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline-lg text-headline-lg font-bold text-primary dark:text-primary-fixed-dim">Thông báo</h1>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User Profile" data-alt="A professional headshot of a young adult with a friendly expression, set against a soft-focus office background. The lighting is bright and natural, reflecting a clean and modern corporate aesthetic. The overall color palette is warm and inviting, aligning with a high-end productivity app interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACAzmI4nZZq4dKWb08pT3Ghsx-Tu9frqdx6uKgb8RiJaD33MZfTC0VnLshFHi34fa5D8T7hLaLFLGL79kjJq1yj6xKsXXrr5-Mc4HFgGOpIS_6UHBVlTvmzaf7UgCBtFp2JlYKTClLENRgVRkkccYHMCrcNTLKKQIktp2O0JZjTiIpjhg6VSvl2daLmy8gbAhotTGqAXFxshDF6RNt74McY2M2xwdduEIqtoO1fRhRLR-WVvBn2H-sMXEy-p4oI2OOu2rpvXtHN1s"/>
+</div>
+</div>
+</div>
+</header>
+<main class="pt-20 px-margin-mobile max-w-3xl mx-auto">
+<!-- Hero Section / Context -->
+<section class="mb-8 mt-4">
+<div class="p-6 bg-primary-container rounded-xl text-on-primary-container shadow-sm flex items-center gap-4">
+<div class="p-3 bg-white/20 rounded-lg">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md font-bold">Quản lý tùy chọn</h2>
+<p class="font-body-md text-body-md opacity-90">Tùy chỉnh cách bạn nhận thông báo từ Schedulr để luôn làm việc hiệu quả.</p>
+</div>
+</div>
+</section>
+<!-- Notification Groups -->
+<div class="space-y-4">
+<!-- Group: General -->
+<div class="bg-surface-container-lowest rounded-xl p-2 shadow-[0_4px_8px_rgba(0,0,0,0.05)]">
+<div class="px-4 py-3">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Cài đặt chung</span>
+</div>
+<!-- Toggle: Push Notifications -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors rounded-lg group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">cell_tower</span>
+</div>
+<div>
+<p class="font-headline-md text-body-md font-semibold text-on-surface">Thông báo đẩy</p>
+<p class="font-body-md text-label-sm text-on-surface-variant">Nhận thông báo tức thì trên màn hình khóa</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle: Sounds -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors rounded-lg group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">volume_up</span>
+</div>
+<div>
+<p class="font-headline-md text-body-md font-semibold text-on-surface">Âm báo</p>
+<p class="font-body-md text-label-sm text-on-surface-variant">Phát âm thanh khi có thông báo mới</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Group: Events -->
+<div class="bg-surface-container-lowest rounded-xl p-2 shadow-[0_4px_8px_rgba(0,0,0,0.05)]">
+<div class="px-4 py-3">
+<span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider">Sự kiện &amp; Lịch</span>
+</div>
+<!-- Toggle: Reminders -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors rounded-lg group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">event_upcoming</span>
+</div>
+<div>
+<p class="font-headline-md text-body-md font-semibold text-on-surface">Nhắc nhở trước sự kiện</p>
+<p class="font-body-md text-label-sm text-on-surface-variant">Thông báo 15 phút trước khi bắt đầu</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Toggle: Weekly Report -->
+<div class="flex items-center justify-between p-4 hover:bg-surface-container-low transition-colors rounded-lg group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">analytics</span>
+</div>
+<div>
+<p class="font-headline-md text-body-md font-semibold text-on-surface">Báo cáo hàng tuần</p>
+<p class="font-body-md text-label-sm text-on-surface-variant">Tổng kết năng suất vào sáng Thứ Hai</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-12 h-6 bg-outline-variant rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<!-- Bento Card: Advanced Settings -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-6 rounded-xl hover:bg-surface-variant transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-primary mb-2">schedule</span>
+<h3 class="font-headline-md text-body-md font-bold mb-1">Giờ yên tĩnh</h3>
+<p class="font-body-md text-label-sm text-on-surface-variant">Tạm dừng tất cả thông báo trong khoảng thời gian tập trung.</p>
+</div>
+<div class="bg-secondary-container p-6 rounded-xl text-on-secondary-container hover:opacity-90 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined mb-2" style="font-variation-settings: 'FILL' 1;">emergency</span>
+<h3 class="font-headline-md text-body-md font-bold mb-1">Ưu tiên khẩn cấp</h3>
+<p class="font-body-md text-label-sm opacity-80">Cho phép các cuộc gọi và lịch họp quan trọng bỏ qua chế độ im lặng.</p>
+</div>
+</div>
+</div>
+<!-- Illustration Section -->
+<div class="mt-12 mb-8 flex flex-col items-center text-center">
+<div class="w-full max-w-sm h-48 rounded-2xl overflow-hidden mb-4 shadow-md border border-outline-variant">
+<img alt="Notification Management" class="w-full h-full object-cover" data-alt="A clean, minimalist workspace featuring a high-end smartphone lying next to a sleek laptop. A gentle morning light spills across the white desk, creating soft shadows. The smartphone screen displays a neat list of notifications, symbolizing organized productivity. The overall atmosphere is calm and controlled, using a palette of soft indigo and clean whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD__WgEuHI-2NsEokWc0Ri5Yz9g9AXL_5UzIQJ6k2U3oUFQN-NA9qWu7tMjUhXLL1roh-b0zDuKowMfR-yCWEgR2rvX6Tcn_7wW0Hdme8Pqlb4ZTagY1Ouy5Dkh5J2ZMyGWdjOnL9cLg3LLSSRD6KHA03SvfAZP_bZuz1A7_vpZP8AKyKevpmcAQtc5MOtSrbUIekDb53n-OfMDVxKibvpcv5YH9bJZjEH9gHH93hzU7vJpAa9p5B8wpHs1bTABoKoP45Nh3LHKidM"/>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xs mx-auto italic">
+                "Kiểm soát thông báo là bước đầu tiên để làm chủ thời gian của bạn."
+            </p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest dark:bg-surface-dark shadow-[0_-4px_8px_rgba(0,0,0,0.05)] rounded-t-xl">
+<div class="w-full max-w-screen-xl mx-auto flex justify-around items-center px-4 py-2 pb-safe">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-sm text-label-sm mt-1">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-sm text-label-sm mt-1">Calendar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-sm text-label-sm mt-1">Tasks</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-3 py-1.5 hover:bg-surface-container-high transition-all active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-sm text-label-sm mt-1">Stats</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary-dark-accent text-on-primary-container dark:text-on-primary rounded-xl px-3 py-1.5 active:scale-90 duration-200">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-sm text-label-sm mt-1">Settings</span>
+</button>
+</div>
+</nav>
+</body></html>
