@@ -70,12 +70,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Xóa', style: TextStyle(color: AppColors.error)),
+            child: Text('Xóa', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
     );
     if (confirmed == true) {
+      if (!mounted) return;
       await context.read<EventProvider>().deleteEvent(_event.id);
       if (mounted) Navigator.pop(context);
     }
@@ -86,9 +87,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     final categoryProvider = context.watch<CategoryProvider>();
     final categoryName = categoryProvider.getNameForCategory(_event.categoryId);
     final categoryColor = categoryProvider.getColorForCategory(_event.categoryId);
+    
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -141,16 +143,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 shape: BoxShape.circle,
                 color: Colors.transparent,
               ),
-              child: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+              child: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
           const Spacer(),
-          const Text(
+          Text(
             'Schedulr',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
           const Spacer(),
@@ -166,7 +168,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 shape: BoxShape.circle,
                 color: Colors.transparent,
               ),
-              child: const Icon(Icons.edit, color: AppColors.onSurface),
+              child: Icon(Icons.edit, color: Theme.of(context).colorScheme.onSurface),
             ),
           ),
         ],
@@ -183,7 +185,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         boxShadow: [
           BoxShadow(
@@ -202,15 +204,15 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryFixed,
+                  color: Theme.of(context).colorScheme.primaryFixed,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                 ),
                 child: Text(
                   categoryName.isNotEmpty ? categoryName : 'Sự kiện',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.onPrimaryFixed,
+                    color: Theme.of(context).colorScheme.onPrimaryFixed,
                   ),
                 ),
               ),
@@ -228,13 +230,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           const SizedBox(height: AppDimensions.sm),
           Row(
             children: [
-              const Icon(Icons.calendar_today, size: 18, color: AppColors.onSurfaceVariant),
+              Icon(Icons.calendar_today, size: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(width: AppDimensions.sm),
               Text(
                 dateStr,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -242,13 +244,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.schedule, size: 18, color: AppColors.onSurfaceVariant),
+              Icon(Icons.schedule, size: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(width: AppDimensions.sm),
               Text(
                 timeStr,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: AppColors.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
@@ -265,7 +267,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         boxShadow: [
           BoxShadow(
@@ -280,7 +282,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.description, size: 20, color: AppColors.primary),
+              Icon(Icons.description, size: 20, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: AppDimensions.sm),
               const Text(
                 'Chi tiết',
@@ -294,9 +296,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           const SizedBox(height: AppDimensions.sm),
           Text(
             _event.description!,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: AppColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               height: 1.5,
             ),
           ),
@@ -310,7 +312,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         boxShadow: [
           BoxShadow(
@@ -325,7 +327,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.checklist, size: 20, color: AppColors.primary),
+              Icon(Icons.checklist, size: 20, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: AppDimensions.sm),
               const Text(
                 'Công việc con',
@@ -347,8 +349,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           : Icons.check_box_outline_blank,
                       size: 20,
                       color: subtask.isCompleted
-                          ? AppColors.primary
-                          : AppColors.outline,
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.outline,
                     ),
                     const SizedBox(width: AppDimensions.sm),
                     Expanded(
@@ -357,8 +359,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         style: TextStyle(
                           fontSize: 14,
                           color: subtask.isCompleted
-                              ? AppColors.onSurfaceVariant
-                              : AppColors.onSurface,
+                              ? Theme.of(context).colorScheme.onSurfaceVariant
+                              : Theme.of(context).colorScheme.onSurface,
                           decoration: subtask.isCompleted
                               ? TextDecoration.lineThrough
                               : null,
@@ -378,7 +380,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         boxShadow: [
           BoxShadow(
@@ -393,7 +395,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.notifications_active, size: 20, color: AppColors.primary),
+              Icon(Icons.notifications_active, size: 20, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: AppDimensions.sm),
               const Text(
                 'Nhắc nhở',
@@ -418,14 +420,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               return Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainer,
+                  color: Theme.of(context).colorScheme.surfaceContainer,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                  border: Border.all(color: AppColors.outlineVariant),
+                  border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.alarm, size: 16, color: AppColors.primary),
+                    Icon(Icons.alarm, size: 16, color: Theme.of(context).colorScheme.primary),
                     const SizedBox(width: AppDimensions.xs),
                     Text(
                       label,
@@ -448,7 +450,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         boxShadow: [
           BoxShadow(
@@ -463,7 +465,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.location_on, size: 20, color: AppColors.primary),
+              Icon(Icons.location_on, size: 20, color: Theme.of(context).colorScheme.primary),
               const SizedBox(width: AppDimensions.sm),
               const Text(
                 'Địa điểm',
@@ -480,9 +482,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               Expanded(
                 child: Text(
                   _event.location!,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: AppColors.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -503,11 +505,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
-              color: _event.isCompleted ? AppColors.surfaceContainerHighest : AppColors.primary,
+              color: _event.isCompleted ? Theme.of(context).colorScheme.surfaceContainerHighest : Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -519,7 +521,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: _event.isCompleted ? AppColors.onSurface : AppColors.onPrimary,
+                color: _event.isCompleted ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onPrimary,
               ),
             ),
           ),
@@ -533,14 +535,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.delete, size: 18, color: AppColors.secondary),
+                Icon(Icons.delete, size: 18, color: Theme.of(context).colorScheme.secondary),
                 const SizedBox(width: AppDimensions.sm),
-                const Text(
+                Text(
                   'Xóa sự kiện',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.secondary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
               ],

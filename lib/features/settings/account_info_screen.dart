@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/helpers/responsive_helper.dart';
 import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/event_provider.dart';
-import '../../shared/providers/task_provider.dart';
 import '../../shared/providers/theme_provider.dart';
 import '../../domain/entities/user.dart';
 
@@ -19,24 +17,25 @@ class AccountInfoScreen extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
     final user = authProvider.user;
     final firebaseUser = authProvider.firebaseUser;
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'Hồ sơ cá nhân',
           style: TextStyle(
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w700,
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_outlined),
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             onPressed: () {},
           ),
         ],
@@ -51,11 +50,11 @@ class AccountInfoScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 60,
-                  backgroundColor: AppColors.primaryContainer,
-                  child: const Icon(
+                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  child: Icon(
                     Icons.person,
                     size: 60,
-                    color: AppColors.onPrimaryContainer,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ),
                 Positioned(
@@ -63,14 +62,14 @@ class AccountInfoScreen extends StatelessWidget {
                   right: 0,
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.photo_camera,
                       size: 20,
-                      color: AppColors.onPrimary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
                   ),
                 ),
@@ -80,18 +79,18 @@ class AccountInfoScreen extends StatelessWidget {
             Text(
               user?.name ?? 'Người dùng',
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
-                color: AppColors.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             Text(
               user?.email ?? '',
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.onSurfaceVariant,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.xl),
@@ -102,11 +101,11 @@ class AccountInfoScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppDimensions.lg),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusXl),
                 border:
-                    Border.all(color: AppColors.surfaceVariant),
+                    Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +115,7 @@ class AccountInfoScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: ResponsiveHelper.scaleFont(context, 18).clamp(16, 22),
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.md),
@@ -129,25 +128,44 @@ class AccountInfoScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppDimensions.lg),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusXl),
                 border:
-                    Border.all(color: AppColors.surfaceVariant),
+                    Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Tùy chỉnh ứng dụng',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(height: AppDimensions.md),
                   _preferenceItem(
+                    context,
+                    Icons.notifications_outlined,
+                    'Cấu hình thông báo',
+                    trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/notification_settings');
+                    },
+                  ),
+                  _preferenceItem(
+                    context,
+                    Icons.palette_outlined,
+                    'Giao diện ứng dụng',
+                    trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    onTap: () {
+                      Navigator.of(context).pushNamed('/app_theme');
+                    },
+                  ),
+                  _preferenceItem(
+                    context,
                     Icons.dark_mode_outlined,
                     'Chế độ tối (Dark Mode)',
                     trailing: Switch(
@@ -157,18 +175,19 @@ class AccountInfoScreen extends StatelessWidget {
                           v ? ThemeMode.dark : ThemeMode.light,
                         );
                       },
-                      activeTrackColor: AppColors.primary,
+                      activeTrackColor: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   _preferenceItem(
+                    context,
                     Icons.language_outlined,
                     'Ngôn ngữ',
-                    trailing: const Text(
+                    trailing: Text(
                       'Tiếng Việt',
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     onTap: () {
@@ -276,7 +295,7 @@ class AccountInfoScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Đăng xuất', style: TextStyle(color: AppColors.error)),
+            child: Text('Đăng xuất', style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -290,17 +309,15 @@ class AccountInfoScreen extends StatelessWidget {
 
   Widget _buildProgressCard(BuildContext context) {
     final eventProvider = context.watch<EventProvider>();
-    final taskProvider = context.watch<TaskProvider>();
-    final total = eventProvider.events.length + taskProvider.tasks.length;
-    final completed = eventProvider.events.where((e) => e.isCompleted).length +
-        taskProvider.tasks.where((t) => t.isCompleted).length;
+    final total = eventProvider.events.length;
+    final completed = eventProvider.events.where((e) => e.isCompleted).length;
     final rate = total > 0 ? completed / total : 0.0;
     final percent = (rate * 100).round();
 
     return Container(
       padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer,
+        color: Theme.of(context).colorScheme.primaryContainer,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -311,7 +328,7 @@ class AccountInfoScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: ResponsiveHelper.scaleFont(context, 18).clamp(16, 22),
               fontWeight: FontWeight.w600,
-              color: AppColors.onPrimaryContainer,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: AppDimensions.xs),
@@ -319,7 +336,7 @@ class AccountInfoScreen extends StatelessWidget {
             'Bạn đã hoàn thành $percent% mục tiêu đã đề ra.',
             style: TextStyle(
               fontSize: ResponsiveHelper.scaleFont(context, 13).clamp(12, 15),
-              color: AppColors.onPrimaryContainer,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: AppDimensions.md),
@@ -327,8 +344,8 @@ class AccountInfoScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
             child: LinearProgressIndicator(
               value: rate,
-              backgroundColor: AppColors.onPrimaryContainer,
-              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.surfaceContainerLowest),
+              backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+              valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.surfaceContainerLowest),
             ),
           ),
           const SizedBox(height: AppDimensions.md),
@@ -337,8 +354,8 @@ class AccountInfoScreen extends StatelessWidget {
             child: TextButton(
               onPressed: () => Navigator.of(context).pushNamed('/analytics'),
               style: TextButton.styleFrom(
-                backgroundColor: AppColors.surfaceContainerLowest,
-                foregroundColor: AppColors.primary,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+                foregroundColor: Theme.of(context).colorScheme.primary,
               ),
               child: const Text('Xem chi tiết'),
             ),
@@ -356,9 +373,9 @@ class AccountInfoScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppDimensions.lg),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-              border: Border.all(color: AppColors.surfaceVariant),
+              border: Border.all(color: Theme.of(context).colorScheme.surfaceVariant),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +388,7 @@ class AccountInfoScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: ResponsiveHelper.scaleFont(context, 18).clamp(16, 22),
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     TextButton(
@@ -381,15 +398,19 @@ class AccountInfoScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: ResponsiveHelper.scaleFont(context, 11).clamp(10, 13),
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
-                _infoField('Email', user?.email ?? ''),
-                _infoField('UID', firebaseUser?.uid ?? ''),
-                _infoField('Số điện thoại', user?.phoneNumber ?? 'Chưa có'),
+                _infoField(context, 'Họ và tên', user?.name ?? 'Alex'),
+                Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
+                _infoField(context, 'Email', user?.email ?? 'adnostitanic0001@gmail.com'),
+                Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
+                _infoField(context, 'Số điện thoại', '+84 123 456 789'),
+                Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
+                _infoField(context, 'Ngày sinh', '01/01/2000'),
               ],
             ),
           ),
@@ -406,9 +427,9 @@ class AccountInfoScreen extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(AppDimensions.lg),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLowest,
+              color: Theme.of(context).colorScheme.surfaceContainerLowest,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-              border: Border.all(color: AppColors.surfaceVariant),
+              border: Border.all(color: Theme.of(context).colorScheme.surfaceVariant),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,30 +437,30 @@ class AccountInfoScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Thông tin cơ bản',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     TextButton(
                       onPressed: () => _showEditDialog(context, authProvider),
-                      child: const Text(
+                      child: Text(
                         'Chỉnh sửa',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
                   ],
                 ),
-                _infoField('Email', user?.email ?? ''),
-                _infoField('UID', firebaseUser?.uid ?? ''),
-                _infoField('Số điện thoại', user?.phoneNumber ?? 'Chưa có'),
+                _infoField(context, 'Email', user?.email ?? ''),
+                _infoField(context, 'UID', firebaseUser?.uid ?? ''),
+                _infoField(context, 'Số điện thoại', user?.phoneNumber ?? 'Chưa có'),
               ],
             ),
           ),
@@ -450,7 +471,7 @@ class AccountInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _infoField(String label, String value) {
+  Widget _infoField(BuildContext context, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDimensions.md),
       child: Column(
@@ -458,18 +479,18 @@ class AccountInfoScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: AppColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           Text(
             value,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
-              color: AppColors.onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
@@ -489,12 +510,12 @@ class AccountInfoScreen extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(
             color: isDestructive
-                ? AppColors.error.withValues(alpha: 0.2)
-                : AppColors.outlineVariant,
+                ? Theme.of(context).colorScheme.error.withValues(alpha: 0.2)
+                : Theme.of(context).colorScheme.outlineVariant,
           ),
           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
           color: isDestructive
-              ? AppColors.errorContainer.withValues(alpha: 0.1)
+              ? Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.1)
               : null,
         ),
         child: Row(
@@ -504,14 +525,14 @@ class AccountInfoScreen extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 color: isDestructive
-                    ? AppColors.error
-                    : AppColors.secondaryContainer,
+                    ? Theme.of(context).colorScheme.error
+                    : Theme.of(context).colorScheme.secondaryContainer,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon,
                   color: isDestructive
-                      ? AppColors.onError
-                      : AppColors.onSecondaryContainer,
+                      ? Theme.of(context).colorScheme.onError
+                      : Theme.of(context).colorScheme.onSecondaryContainer,
                   size: 20),
             ),
             const SizedBox(width: AppDimensions.sm + 4),
@@ -526,8 +547,8 @@ class AccountInfoScreen extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: isDestructive
-                          ? AppColors.error
-                          : AppColors.onSurface,
+                          ? Theme.of(context).colorScheme.error
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   Text(
@@ -536,8 +557,8 @@ class AccountInfoScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10,
                       color: isDestructive
-                          ? AppColors.error.withValues(alpha: 0.7)
-                          : AppColors.onSurfaceVariant,
+                          ? Theme.of(context).colorScheme.error.withValues(alpha: 0.7)
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -550,7 +571,7 @@ class AccountInfoScreen extends StatelessWidget {
   }
 
   Widget _preferenceItem(
-      IconData icon, String title, {Widget? trailing, VoidCallback? onTap}) {
+      BuildContext context, IconData icon, String title, {Widget? trailing, VoidCallback? onTap}) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
@@ -561,19 +582,19 @@ class AccountInfoScreen extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, color: AppColors.onSurfaceVariant),
+            Icon(icon, color: Theme.of(context).colorScheme.onSurfaceVariant),
             const SizedBox(width: AppDimensions.md),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.onSurface,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
-            if (trailing != null) trailing,
+            ?trailing,
           ],
         ),
       ),
@@ -619,15 +640,15 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.surfaceContainerLowest,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
-      title: const Text(
+      title: Text(
         'Chỉnh sửa thông tin',
         style: TextStyle(
           fontWeight: FontWeight.w700,
-          color: AppColors.primary,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
       content: Column(
@@ -635,29 +656,29 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Họ và tên',
-              labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
+              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               border: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.outlineVariant),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
               ),
             ),
           ),
-          const SizedBox(height: AppDimensions.md),
+          SizedBox(height: AppDimensions.md),
           TextField(
             controller: _phoneController,
             keyboardType: TextInputType.phone,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               labelText: 'Số điện thoại',
-              labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
+              labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               border: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.outlineVariant),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
               ),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
               ),
             ),
           ),
@@ -666,16 +687,16 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text(
+          child: Text(
             'Hủy',
-            style: TextStyle(color: AppColors.onSurfaceVariant),
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
           ),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _handleSave,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.onPrimary,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
             ),

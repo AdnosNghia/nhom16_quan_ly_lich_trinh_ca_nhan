@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../shared/providers/auth_provider.dart';
 
@@ -74,8 +73,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -84,14 +84,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
               constraints: BoxConstraints(maxWidth: AppDimensions.cardMaxWidth(context)),
               padding: const EdgeInsets.all(AppDimensions.xl),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                 border: Border.all(
-                  color: AppColors.outlineVariant.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.08),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.08),
                     blurRadius: 32,
                     offset: const Offset(0, 8),
                   ),
@@ -106,32 +106,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer,
+                          color: Theme.of(context).colorScheme.primaryContainer,
                           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.calendar_month,
-                          color: AppColors.onPrimaryContainer,
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
                           size: 36,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.md),
-                      const Text(
+                      Text(
                         'Schedulr',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           letterSpacing: -0.5,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.xs),
-                      const Text(
+                      Text(
                         'Lên kế hoạch mỗi ngày, đơn giản hóa cuộc sống',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -153,8 +153,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: const Icon(Icons.g_mobiledata),
                       label: const Text('Đăng ký với Google'),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.onSurface,
-                        side: BorderSide(color: AppColors.outlineVariant),
+                        foregroundColor: Theme.of(context).colorScheme.onSurface,
+                        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
@@ -165,33 +165,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: AppDimensions.md),
                   Row(
                     children: [
-                      const Expanded(child: Divider(color: AppColors.outlineVariant)),
+                      Expanded(child: Divider(color: Theme.of(context).colorScheme.outlineVariant)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
                         child: Text(
                           'HOẶC',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.outline,
+                            color: Theme.of(context).colorScheme.outline,
                             letterSpacing: 2,
                           ),
                         ),
                       ),
-                      const Expanded(child: Divider(color: AppColors.outlineVariant)),
+                      Expanded(child: Divider(color: Theme.of(context).colorScheme.outlineVariant)),
                     ],
                   ),
                   const SizedBox(height: AppDimensions.lg),
                   // Name field
                   TextField(
                     controller: _nameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Họ và tên',
-                      labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
+                      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.outlineVariant),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ),
@@ -200,14 +200,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Địa chỉ Email',
-                      labelStyle: TextStyle(color: AppColors.onSurfaceVariant),
+                      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                       border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.outlineVariant),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ),
@@ -218,19 +218,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Mật khẩu',
-                      labelStyle: const TextStyle(color: AppColors.onSurfaceVariant),
-                      border: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.outlineVariant),
+                      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: AppColors.outline,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
@@ -243,19 +243,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     obscureText: _obscureConfirm,
                     decoration: InputDecoration(
                       labelText: 'Xác nhận mật khẩu',
-                      labelStyle: const TextStyle(color: AppColors.onSurfaceVariant),
-                      border: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.outlineVariant),
+                      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureConfirm
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: AppColors.outline,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
                         onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
                       ),
@@ -266,7 +266,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     Text(
                       _errorMessage!,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 12, color: AppColors.error),
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.error),
                     ),
                   ],
                   const SizedBox(height: AppDimensions.lg),
@@ -289,7 +289,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                         ),
                         elevation: 4,
-                        shadowColor: AppColors.primary.withValues(alpha: 0.2),
+                        shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                       ),
                     ),
                   ),
@@ -298,20 +298,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Đã có tài khoản?',
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text(
+                        child: Text(
                           'Đăng nhập',
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),

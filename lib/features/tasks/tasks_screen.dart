@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/category_provider.dart';
 import '../../domain/entities/event.dart';
@@ -26,7 +24,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -39,22 +37,24 @@ class _TasksScreenState extends State<TasksScreen> {
                 children: [
                   CircleAvatar(
                     radius: 20,
-                    backgroundColor: AppColors.surfaceContainer,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainer,
                     child: const Icon(Icons.person_outline),
                   ),
                   const SizedBox(width: AppDimensions.sm + 4),
-                  const Text(
+                  Text(
                     'Schedulr',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined),
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     onPressed: () {},
                   ),
                 ],
@@ -68,19 +68,23 @@ class _TasksScreenState extends State<TasksScreen> {
                   final in24h = now.add(const Duration(hours: 24));
                   final in7days = now.add(const Duration(days: 7));
                   final catProvider = context.read<CategoryProvider>();
-                  final delegateCat = catProvider.getCategoryByName(AppStrings.delegate);
+                  final delegateCat = catProvider.getCategoryByName(
+                    AppStrings.delegate,
+                  );
 
                   final delegateId = delegateCat?.id ?? '';
                   final doNow = eventProvider.events.where((e) {
                     if (e.categoryId == delegateId) return false;
                     if (e.isCompleted && e.endTime.isBefore(now)) return true;
-                    return (e.startTime.isAfter(now) && e.startTime.isBefore(in24h))
-                        || (e.startTime.isBefore(now) && e.endTime.isAfter(now));
+                    return (e.startTime.isAfter(now) &&
+                            e.startTime.isBefore(in24h)) ||
+                        (e.startTime.isBefore(now) && e.endTime.isAfter(now));
                   }).toList();
                   final schedule = eventProvider.events.where((e) {
                     if (e.categoryId == delegateId) return false;
                     if (e.isCompleted) return false;
-                    return e.startTime.isAfter(in24h) && e.startTime.isBefore(in7days);
+                    return e.startTime.isAfter(in24h) &&
+                        e.startTime.isBefore(in7days);
                   }).toList();
                   final delegate = eventProvider.events.where((e) {
                     if (e.categoryId != delegateId) return false;
@@ -88,7 +92,9 @@ class _TasksScreenState extends State<TasksScreen> {
                     return true;
                   }).toList();
                   final missed = eventProvider.events.where((e) {
-                    return !e.isCompleted && e.endTime.isBefore(now) && e.endTime.isAfter(startOfToday);
+                    return !e.isCompleted &&
+                        e.endTime.isBefore(now) &&
+                        e.endTime.isAfter(startOfToday);
                   }).toList();
 
                   return SingleChildScrollView(
@@ -96,20 +102,22 @@ class _TasksScreenState extends State<TasksScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           AppStrings.eisenhowerTitle,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.xs),
                         Text(
                           AppStrings.eisenhowerDesc,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: AppDimensions.lg),
@@ -117,11 +125,13 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.doNow,
                           icon: Icons.bolt,
                           count: '${doNow.length} Công việc',
-                          bgColor: AppColors.primary,
-                          textColor: AppColors.onPrimary,
-                          borderColor: AppColors.primary.withValues(alpha: 0.1),
+                          bgColor: Theme.of(context).colorScheme.primary,
+                          textColor: Theme.of(context).colorScheme.onPrimary,
+                          borderColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.1),
                           events: doNow,
-                          accentColor: AppColors.primary,
+                          accentColor: Theme.of(context).colorScheme.primary,
                           quadrant: 0,
                         ),
                         const SizedBox(height: AppDimensions.md),
@@ -129,11 +139,13 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.schedule,
                           icon: Icons.calendar_month,
                           count: '${schedule.length} Công việc',
-                          bgColor: AppColors.secondary,
-                          textColor: AppColors.onSecondary,
-                          borderColor: AppColors.secondary.withValues(alpha: 0.1),
+                          bgColor: Theme.of(context).colorScheme.secondary,
+                          textColor: Theme.of(context).colorScheme.onSecondary,
+                          borderColor: Theme.of(
+                            context,
+                          ).colorScheme.secondary.withValues(alpha: 0.1),
                           events: schedule,
-                          accentColor: AppColors.secondary,
+                          accentColor: Theme.of(context).colorScheme.secondary,
                           quadrant: 1,
                         ),
                         const SizedBox(height: AppDimensions.md),
@@ -141,11 +153,13 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.delegate,
                           icon: Icons.group,
                           count: '${delegate.length} Công việc',
-                          bgColor: AppColors.tertiary,
-                          textColor: AppColors.onTertiary,
-                          borderColor: AppColors.tertiary.withValues(alpha: 0.1),
+                          bgColor: Theme.of(context).colorScheme.tertiary,
+                          textColor: Theme.of(context).colorScheme.onTertiary,
+                          borderColor: Theme.of(
+                            context,
+                          ).colorScheme.tertiary.withValues(alpha: 0.1),
                           events: delegate,
-                          accentColor: AppColors.tertiary,
+                          accentColor: Theme.of(context).colorScheme.tertiary,
                           quadrant: 2,
                         ),
                         const SizedBox(height: AppDimensions.md),
@@ -153,11 +167,17 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.eliminate,
                           icon: Icons.delete,
                           count: '${missed.length} Công việc',
-                          bgColor: AppColors.surfaceContainerHighest,
-                          textColor: AppColors.onSurfaceVariant,
-                          borderColor: AppColors.outlineVariant,
+                          bgColor: Theme.of(
+                            context,
+                          ).colorScheme.surfaceContainerHighest,
+                          textColor: Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant,
+                          borderColor: Theme.of(
+                            context,
+                          ).colorScheme.outlineVariant,
                           events: missed,
-                          accentColor: AppColors.outline,
+                          accentColor: Theme.of(context).colorScheme.outline,
                           quadrant: 3,
                           isStrikethrough: true,
                         ),
@@ -170,27 +190,6 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: AppBottomNav(
-        currentIndex: 2,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.of(context).pushReplacementNamed('/dashboard');
-              break;
-            case 1:
-              Navigator.of(context).pushReplacementNamed('/calendar');
-              break;
-            case 2:
-              break;
-            case 3:
-              Navigator.of(context).pushReplacementNamed('/analytics');
-              break;
-            case 4:
-              Navigator.of(context).pushReplacementNamed('/settings');
-              break;
-          }
-        },
       ),
     );
   }
@@ -209,7 +208,7 @@ class _TasksScreenState extends State<TasksScreen> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         border: Border.all(color: borderColor),
       ),
@@ -251,7 +250,9 @@ class _TasksScreenState extends State<TasksScreen> {
                     ),
                     decoration: BoxDecoration(
                       color: textColor.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
+                      borderRadius: BorderRadius.circular(
+                        AppDimensions.radiusFull,
+                      ),
                     ),
                     child: Text(
                       count,
@@ -269,7 +270,8 @@ class _TasksScreenState extends State<TasksScreen> {
             child: Column(
               children: List.generate(
                 events.length,
-                (index) => _buildEventRow(events[index], accentColor, isStrikethrough),
+                (index) =>
+                    _buildEventRow(events[index], accentColor, isStrikethrough),
               ),
             ),
           ),
@@ -295,7 +297,7 @@ class _TasksScreenState extends State<TasksScreen> {
     final diff = target.difference(now);
     final totalMinutes = diff.inMinutes;
     final totalHours = diff.inHours;
-    final suffix = isFuture ? 'sẽ bắt đầu' : 'sẽ kết thúc';
+    final suffix = isFuture ? 'bắt đầu' : 'kết thúc';
 
     if (isFuture) {
       final remindMin = event.reminderMinutes.isNotEmpty
@@ -306,18 +308,20 @@ class _TasksScreenState extends State<TasksScreen> {
       if (totalMinutes < 15) return 'Sắp $suffix';
     }
 
-    if (totalHours < 1) return 'Chưa đầy 1h nữa $suffix';
-    if (totalHours < 24) return 'còn $totalHours giờ nữa $suffix';
+    if (totalHours < 1) return 'Chưa đầy 1h nữa sẽ $suffix';
+    if (totalHours < 24) return 'còn $totalHours giờ nữa sẽ $suffix';
     final days = totalHours ~/ 24;
     final hours = totalHours % 24;
-    if (hours == 0) return 'còn $days ngày nữa $suffix';
-    return 'còn $days ngày $hours giờ nữa $suffix';
+    if (hours == 0) return 'còn $days ngày nữa sẽ $suffix';
+    return 'còn $days ngày $hours giờ nữa sẽ $suffix';
   }
 
   Widget _buildEventRow(Event event, Color accentColor, bool isStrikethrough) {
     final dateFormat = DateFormat('d/M/yyyy  HH:mm');
     final remaining = _formatRemainingTime(event);
-    final catName = context.read<CategoryProvider>().getNameForCategory(event.categoryId);
+    final catName = context.read<CategoryProvider>().getNameForCategory(
+      event.categoryId,
+    );
     final showCategory = isStrikethrough && catName.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.only(bottom: AppDimensions.sm),
@@ -352,8 +356,8 @@ class _TasksScreenState extends State<TasksScreen> {
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: isStrikethrough || event.isCompleted
-                        ? AppColors.onSurfaceVariant
-                        : AppColors.onSurface,
+                        ? Theme.of(context).colorScheme.onSurfaceVariant
+                        : Theme.of(context).colorScheme.onSurface,
                     decoration: isStrikethrough || event.isCompleted
                         ? TextDecoration.lineThrough
                         : null,
@@ -367,8 +371,10 @@ class _TasksScreenState extends State<TasksScreen> {
                     style: TextStyle(
                       fontSize: 11,
                       color: event.isCompleted
-                          ? AppColors.onSurfaceVariant.withValues(alpha: 0.5)
-                          : AppColors.onSurfaceVariant.withValues(alpha: 0.7),
+                          ? Theme.of(context).colorScheme.onSurfaceVariant
+                                .withValues(alpha: 0.5)
+                          : Theme.of(context).colorScheme.onSurfaceVariant
+                                .withValues(alpha: 0.7),
                     ),
                   ),
                 if (showCategory) const SizedBox(height: 2),
@@ -378,8 +384,10 @@ class _TasksScreenState extends State<TasksScreen> {
                   style: TextStyle(
                     fontSize: 11,
                     color: event.isCompleted
-                        ? AppColors.onSurfaceVariant.withValues(alpha: 0.6)
-                        : AppColors.onSurfaceVariant,
+                        ? Theme.of(
+                            context,
+                          ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6)
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
                 if (remaining.isNotEmpty) ...[
@@ -391,8 +399,8 @@ class _TasksScreenState extends State<TasksScreen> {
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: remaining.startsWith('còn')
-                          ? AppColors.tertiary
-                          : AppColors.primary,
+                          ? Theme.of(context).colorScheme.tertiary
+                          : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -403,7 +411,11 @@ class _TasksScreenState extends State<TasksScreen> {
             onTap: () {
               context.read<EventProvider>().deleteEvent(event.id);
             },
-            child: const Icon(Icons.close, size: 16, color: AppColors.outlineVariant),
+            child: Icon(
+              Icons.close,
+              size: 16,
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
           ),
         ],
       ),

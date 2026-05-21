@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
 import '../../shared/providers/auth_provider.dart';
@@ -57,8 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -67,11 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
               constraints: BoxConstraints(maxWidth: AppDimensions.cardMaxWidth(context)),
               padding: const EdgeInsets.all(AppDimensions.xl),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusXl),
                 border: Border.all(
-                  color: AppColors.outlineVariant.withValues(alpha: 0.3),
+                  color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -89,32 +90,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(
                               AppDimensions.radiusXl),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.calendar_today,
-                          color: AppColors.onPrimary,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           size: 28,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.md),
                       Text(
                         AppStrings.loginTitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.sm),
                       Text(
                         AppStrings.loginSubtitle,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -135,9 +136,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       icon: const Icon(Icons.g_mobiledata),
                       label: const Text(AppStrings.googleSignIn),
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.onSurface,
+                        foregroundColor: Theme.of(context).colorScheme.onSurface,
                         side: BorderSide(
-                          color: AppColors.outlineVariant,
+                          color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                         padding: const EdgeInsets.symmetric(
                             vertical: 14),
@@ -151,23 +152,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: AppDimensions.lg),
                   Row(
                     children: [
-                      const Expanded(
-                        child: Divider(color: AppColors.outlineVariant),
+                      Expanded(
+                        child: Divider(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: AppDimensions.md),
                         child: Text(
                           AppStrings.or,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.outline,
+                            color: Theme.of(context).colorScheme.outline,
                             letterSpacing: 2,
                           ),
                         ),
                       ),
-                      const Expanded(
-                        child: Divider(color: AppColors.outlineVariant),
+                      Expanded(
+                        child: Divider(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
                     ],
                   ),
@@ -176,15 +177,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: AppStrings.emailLabel,
-                      labelStyle: const TextStyle(
-                          color: AppColors.onSurfaceVariant),
-                      border: const UnderlineInputBorder(
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: UnderlineInputBorder(
                         borderSide:
-                            BorderSide(color: AppColors.outlineVariant),
+                            BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
-                      focusedBorder: const UnderlineInputBorder(
+                      focusedBorder: UnderlineInputBorder(
                         borderSide:
-                            BorderSide(color: AppColors.primary),
+                            BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                     ),
                   ),
@@ -194,22 +195,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: AppStrings.passwordLabel,
-                      labelStyle: const TextStyle(
-                          color: AppColors.onSurfaceVariant),
-                      border: const UnderlineInputBorder(
+                      labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: UnderlineInputBorder(
                         borderSide:
-                            BorderSide(color: AppColors.outlineVariant),
+                            BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
                       ),
-                      focusedBorder: const UnderlineInputBorder(
+                      focusedBorder: UnderlineInputBorder(
                         borderSide:
-                            BorderSide(color: AppColors.primary),
+                            BorderSide(color: Theme.of(context).colorScheme.primary),
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
                               ? Icons.visibility_outlined
                               : Icons.visibility_off_outlined,
-                          color: AppColors.outline,
+                          color: Theme.of(context).colorScheme.outline,
                         ),
                         onPressed: () => setState(
                             () => _obscurePassword = !_obscurePassword),
@@ -221,9 +222,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       _errorMessage!,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.error,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ],
@@ -241,7 +242,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         elevation: 4,
                         shadowColor:
-                            AppColors.primary.withValues(alpha: 0.3),
+                            Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                       ),
                       child: _isLoading
                           ? const SizedBox(
@@ -257,43 +258,36 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: AppDimensions.sm),
                   TextButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Tính năng đang phát triển'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    },
+                    onPressed: () => _showForgotPasswordDialog(),
                     child: Text(
                       AppStrings.forgotPassword,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
                   const SizedBox(height: AppDimensions.md),
-                  const Divider(color: AppColors.outlineVariant),
+                  Divider(color: Theme.of(context).colorScheme.outlineVariant),
                   const SizedBox(height: AppDimensions.md),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         AppStrings.noAccount,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pushNamed('/register'),
-                        child: const Text(
+                        child: Text(
                           AppStrings.signUp,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
-                            color: AppColors.secondary,
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
                       ),
@@ -305,6 +299,139 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showForgotPasswordDialog() {
+    final resetEmailController = TextEditingController(text: _emailController.text);
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        bool isSending = false;
+        String? dialogError;
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+              ),
+              title: Text(
+                'Quên mật khẩu',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Nhập địa chỉ email của bạn để nhận liên kết đặt lại mật khẩu.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+                  TextField(
+                    controller: resetEmailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
+                  ),
+                  if (dialogError != null) ...[
+                    const SizedBox(height: AppDimensions.sm),
+                    Text(
+                      dialogError!,
+                      style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.error),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(
+                    'Hủy',
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: isSending
+                      ? null
+                      : () async {
+                          final email = resetEmailController.text.trim();
+                          if (email.isEmpty) {
+                            setDialogState(() => dialogError = 'Vui lòng nhập email');
+                            return;
+                          }
+                          setDialogState(() {
+                            isSending = true;
+                            dialogError = null;
+                          });
+                          try {
+                            await firebase_auth.FirebaseAuth.instance
+                                .sendPasswordResetEmail(email: email);
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(ctx).showSnackBar(
+                              const SnackBar(
+                                content: Text('Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.'),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          } on firebase_auth.FirebaseAuthException catch (e) {
+                            String msg;
+                            if (e.code == 'user-not-found') {
+                              msg = 'Email này chưa được đăng ký';
+                            } else if (e.code == 'invalid-email') {
+                              msg = 'Địa chỉ email không hợp lệ';
+                            } else {
+                              msg = 'Đã có lỗi xảy ra, vui lòng thử lại';
+                            }
+                            setDialogState(() {
+                              isSending = false;
+                              dialogError = msg;
+                            });
+                          } catch (_) {
+                            setDialogState(() {
+                              isSending = false;
+                              dialogError = 'Đã có lỗi xảy ra, vui lòng thử lại';
+                            });
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                    ),
+                  ),
+                  child: isSending
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Text('Gửi email'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }

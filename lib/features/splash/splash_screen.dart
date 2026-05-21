@@ -24,10 +24,14 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(milliseconds: 300));
 
     if (!mounted) return;
-    await Future.wait([
-      context.read<AuthProvider>().checkLoginStatus(),
-      context.read<CategoryProvider>().loadCategories(),
-    ]);
+    try {
+      await Future.wait([
+        context.read<AuthProvider>().checkLoginStatus(),
+        context.read<CategoryProvider>().loadCategories(),
+      ]).timeout(const Duration(seconds: 10));
+    } catch (_) {
+      // Timeout or error — proceed anyway
+    }
 
     if (!mounted) return;
     final authProvider = context.read<AuthProvider>();
@@ -42,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.center,

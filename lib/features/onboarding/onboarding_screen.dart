@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/helpers/responsive_helper.dart';
@@ -44,8 +43,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -59,10 +59,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 children: [
                   Text(
                     AppStrings.appName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   TextButton(
@@ -72,8 +72,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                     child: Text(
                       AppStrings.skip,
-                      style: const TextStyle(
-                        color: AppColors.onSurfaceVariant,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ),
@@ -103,13 +103,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               width: size,
                               height: size,
                               decoration: BoxDecoration(
-                                color: AppColors.surfaceContainerLow,
+                                color: Theme.of(context).colorScheme.surfaceContainerLow,
                                 borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                               ),
                               child: Icon(
                                 item.icon,
                                 size: size * 0.4,
-                                color: AppColors.primary.withValues(alpha: 0.3),
+                                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                               ),
                             );
                           },
@@ -121,7 +121,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: TextStyle(
                             fontSize: ResponsiveHelper.scaleFont(context, 24).clamp(18, 32),
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -131,7 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: ResponsiveHelper.scaleFont(context, 14).clamp(12, 18),
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -152,8 +152,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 8,
                   decoration: BoxDecoration(
                     color: _currentPage == index
-                        ? AppColors.secondaryContainer
-                        : AppColors.surfaceContainerHighest,
+                        ? Theme.of(context).colorScheme.secondaryContainer
+                        : Theme.of(context).colorScheme.surfaceContainerHighest,
                     borderRadius:
                         BorderRadius.circular(AppDimensions.radiusFull),
                   ),
@@ -180,8 +180,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.secondaryContainer,
-                    foregroundColor: AppColors.onTertiaryContainer,
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                    foregroundColor: Theme.of(context).colorScheme.onTertiaryContainer,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius:
@@ -210,9 +210,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             const SizedBox(height: AppDimensions.lg),
             Text(
               'Bước ${_currentPage + 1} trên ${_items.length}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: AppColors.outlineVariant,
+                color: Theme.of(context).colorScheme.outlineVariant,
               ),
             ),
             const SizedBox(height: AppDimensions.lg),

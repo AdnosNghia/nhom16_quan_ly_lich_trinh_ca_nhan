@@ -8,16 +8,11 @@ import 'shared/providers/theme_provider.dart';
 import 'shared/providers/auth_provider.dart';
 import 'shared/providers/event_provider.dart';
 import 'shared/providers/category_provider.dart';
-import 'shared/providers/task_provider.dart';
 import 'features/splash/splash_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/auth/login_screen.dart';
 import 'features/auth/register_screen.dart';
-import 'features/dashboard/dashboard_screen.dart';
-import 'features/calendar/calendar_screen.dart';
-import 'features/tasks/tasks_screen.dart';
-import 'features/analytics/analytics_screen.dart';
-import 'features/settings/settings_screen.dart';
+import 'features/home/home_screen.dart';
 import 'features/settings/account_info_screen.dart';
 import 'features/settings/notification_settings_screen.dart';
 import 'features/settings/app_theme_screen.dart';
@@ -33,21 +28,33 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   await initializeDateFormatting('vi_VN');
-  runApp(const SchedulrApp());
+
+  // Initialize theme from SharedPreferences before app starts
+  final themeProvider = ThemeProvider();
+  await themeProvider.init();
+
+  runApp(SchedulrApp(themeProvider: themeProvider));
 }
 
 class SchedulrApp extends StatelessWidget {
-  const SchedulrApp({super.key});
+  final ThemeProvider themeProvider;
+  const SchedulrApp({super.key, required this.themeProvider});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider.value(value: themeProvider),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => EventProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, EventProvider>(
+          create: (_) => EventProvider(),
+          update: (_, authProvider, eventProvider) {
+            final uid = authProvider.firebaseUser?.uid;
+            eventProvider!.updateUser(uid);
+            return eventProvider;
+          },
+        ),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
-        ChangeNotifierProvider(create: (_) => TaskProvider()),
       ],
       child: Builder(
         builder: (context) {
@@ -63,11 +70,12 @@ class SchedulrApp extends StatelessWidget {
               '/': (context) => const SplashScreen(),
               '/onboarding': (context) => const OnboardingScreen(),
               '/login': (context) => const LoginScreen(),
-              '/dashboard': (context) => const DashboardScreen(),
-              '/calendar': (context) => const CalendarScreen(),
-              '/tasks': (context) => const TasksScreen(),
-              '/analytics': (context) => const AnalyticsScreen(),
-              '/settings': (context) => const SettingsScreen(),
+              '/dashboard': (context) => const HomeScreen(),
+              '/home': (context) => const HomeScreen(),
+              '/calendar': (context) => const HomeScreen(),
+              '/tasks': (context) => const HomeScreen(),
+              '/analytics': (context) => const HomeScreen(),
+              '/settings': (context) => const HomeScreen(),
               '/account_info': (context) => const AccountInfoScreen(),
               '/notification_settings': (context) =>
                   const NotificationSettingsScreen(),

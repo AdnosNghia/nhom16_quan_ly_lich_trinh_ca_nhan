@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/helpers/responsive_helper.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/subtask.dart';
@@ -58,8 +56,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -72,22 +71,22 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 children: [
                   CircleAvatar(
                     radius: 16,
-                    backgroundColor: AppColors.surfaceContainerHighest,
+                    backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
                     child: const Icon(Icons.person_outline, size: 18),
                   ),
                   const SizedBox(width: AppDimensions.sm + 4),
-                  const Text(
+                  Text(
                     'Schedulr',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.notifications_outlined),
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     onPressed: () {},
                   ),
                 ],
@@ -100,7 +99,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow,
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   borderRadius:
                       BorderRadius.circular(AppDimensions.radiusXl),
                 ),
@@ -116,7 +115,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               const EdgeInsets.symmetric(vertical: 8),
                           decoration: BoxDecoration(
                             color: _viewIndex == index
-                                ? AppColors.surfaceContainerLowest
+                                ? Theme.of(context).colorScheme.surfaceContainerLowest
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(
                                 AppDimensions.radiusMd),
@@ -130,8 +129,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   ? FontWeight.w700
                                   : FontWeight.w400,
                               color: _viewIndex == index
-                                  ? AppColors.primary
-                                  : AppColors.onSurfaceVariant,
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ),
@@ -157,10 +156,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               ? 'Tuần ${_getWeekStart(_selectedDate).day}/${_getWeekStart(_selectedDate).month} - ${_getWeekEnd(_getWeekStart(_selectedDate)).day}/${_getWeekEnd(_getWeekStart(_selectedDate)).month} năm ${_selectedDate.year}'
                               : DateFormat("EEEE, 'ngày' d 'tháng' M", 'vi_VN').format(_selectedDate),
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -168,7 +167,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.chevron_left),
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         onPressed: () {
                           setState(() {
                             if (_viewIndex == 0) {
@@ -186,7 +185,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.chevron_right),
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         onPressed: () {
                           setState(() {
                             if (_viewIndex == 0) {
@@ -241,27 +240,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: AppBottomNav(
-        currentIndex: 1,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              Navigator.of(context).pushReplacementNamed('/dashboard');
-              break;
-            case 1:
-              break;
-            case 2:
-              Navigator.of(context).pushReplacementNamed('/tasks');
-              break;
-            case 3:
-              Navigator.of(context).pushReplacementNamed('/analytics');
-              break;
-            case 4:
-              Navigator.of(context).pushReplacementNamed('/settings');
-              break;
-          }
-        },
-      ),
     );
   }
 
@@ -274,7 +252,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -288,7 +266,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: ResponsiveHelper.scaleFont(context, 11).clamp(9, 14),
-                    color: AppColors.outlineVariant,
+                    color: Theme.of(context).colorScheme.outlineVariant,
                   ),
                 ),
               ),
@@ -341,7 +319,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.primaryContainer.withValues(alpha: 0.2)
+                            ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.2)
                             : null,
                         borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
                       ),
@@ -354,10 +332,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               fontSize: ResponsiveHelper.scaleFont(context, 12).clamp(10, 16),
                               fontWeight: isToday ? FontWeight.w700 : FontWeight.w400,
                               color: isPrevMonth || isNextMonth
-                                  ? AppColors.outlineVariant.withValues(alpha: 0.3)
+                                  ? Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)
                                   : isToday
-                                      ? AppColors.primary
-                                      : AppColors.onSurface,
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           if (eventsOnDay.isNotEmpty)
@@ -400,7 +378,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -423,7 +401,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.primaryContainer.withValues(alpha: 0.3)
+                          ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3)
                           : null,
                       borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
                     ),
@@ -433,7 +411,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           _weekdays[index],
                           style: TextStyle(
                             fontSize: 10,
-                            color: AppColors.outlineVariant,
+                            color: Theme.of(context).colorScheme.outlineVariant,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -443,8 +421,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             fontSize: 14,
                             fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
                             color: isToday
-                                ? AppColors.primary
-                                : AppColors.onSurface,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
                         if (eventsOnDay.isNotEmpty)
@@ -491,7 +469,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -507,18 +485,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Text(
                       DateFormat("EEEE, 'ngày' d 'tháng' M", 'vi_VN').format(_selectedDate),
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       '${dayEvents.length} Sự kiện đã lên lịch',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -530,7 +508,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   onPressed: () {
                     Navigator.of(context).pushNamed('/add_event', arguments: _selectedDate);
                   },
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   child: const Icon(Icons.add),
                 ),
             ],
@@ -539,10 +517,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (dayEvents.isEmpty)
             Padding(
               padding: const EdgeInsets.all(AppDimensions.md),
-              child: const Text(
+              child: Text(
                 'Không có sự kiện nào trong ngày này.',
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: AppColors.onSurfaceVariant),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             )
           else
@@ -568,7 +546,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.lg),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -584,18 +562,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Text(
                       DateFormat("EEEE, 'ngày' d 'tháng' M", 'vi_VN').format(_selectedDate),
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       '${dayEvents.length} Sự kiện - Chi tiết công việc',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -607,7 +585,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   onPressed: () {
                     Navigator.of(context).pushNamed('/add_event', arguments: _selectedDate);
                   },
-                  backgroundColor: AppColors.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   child: const Icon(Icons.add),
                 ),
             ],
@@ -616,10 +594,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
           if (dayEvents.isEmpty)
             Padding(
               padding: const EdgeInsets.all(AppDimensions.md),
-              child: const Text(
+              child: Text(
                 'Không có sự kiện nào trong ngày này.',
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: AppColors.onSurfaceVariant),
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
               ),
             )
           else
@@ -650,7 +628,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           child: Container(
             padding: const EdgeInsets.all(AppDimensions.md),
             decoration: BoxDecoration(
-              color: AppColors.surfaceContainerLow,
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
             ),
             child: Column(
@@ -674,18 +652,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           Text(
                             event.title,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.onSurface,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
                           Text(
                             '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13,
-                              color: AppColors.onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -700,7 +678,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             content: Text('Xóa "${event.title}"?', overflow: TextOverflow.ellipsis),
                             actions: [
                               TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Hủy')),
-                              TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Xóa', style: TextStyle(color: AppColors.error))),
+                              TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Xóa', style: TextStyle(color: Theme.of(context).colorScheme.error))),
                             ],
                           ),
                         );
@@ -708,7 +686,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           await eventProvider.deleteEvent(event.id);
                         }
                       },
-                      child: const Icon(Icons.delete_outline, color: AppColors.outline, size: 20),
+                      child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.outline, size: 20),
                     ),
                   ],
                 ),
@@ -722,31 +700,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ),
                 if (subtasks.isNotEmpty) ...[
                   const SizedBox(height: AppDimensions.sm),
-                  Divider(height: 1, color: AppColors.surfaceVariant.withValues(alpha: 0.5)),
+                  Divider(height: 1, color: Theme.of(context).colorScheme.surfaceVariant.withValues(alpha: 0.5)),
                   const SizedBox(height: AppDimensions.sm),
                   Row(
                     children: [
                       Text(
                         'Công việc con ($completedSubtasks/${subtasks.length})',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
                       const SizedBox(width: AppDimensions.sm),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryContainer.withValues(alpha: 0.3),
+                          color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                         ),
                         child: Text(
                           '${completedSubtasks == subtasks.length ? 100 : subtasks.isEmpty ? 0 : (completedSubtasks * 100 / subtasks.length).round()}%',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.primary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),
@@ -760,7 +738,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             Icon(
                               subtask.isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
                               size: 16,
-                              color: subtask.isCompleted ? AppColors.primary : AppColors.outlineVariant,
+                              color: subtask.isCompleted ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.outlineVariant,
                             ),
                             const SizedBox(width: AppDimensions.sm),
                             Expanded(
@@ -769,7 +747,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: subtask.isCompleted ? AppColors.outlineVariant : AppColors.onSurface,
+                                  color: subtask.isCompleted ? Theme.of(context).colorScheme.outlineVariant : Theme.of(context).colorScheme.onSurface,
                                   decoration: subtask.isCompleted ? TextDecoration.lineThrough : null,
                                 ),
                               ),
@@ -798,7 +776,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLow,
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         ),
         child: Row(
@@ -819,18 +797,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       time,
                       overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.onSurfaceVariant,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                   if (subtaskCount > 0)
@@ -839,9 +817,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Text(
                         '$subtaskCount công việc con',
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ),
@@ -857,7 +835,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     content: Text('Xóa "${event.title}"?', overflow: TextOverflow.ellipsis),
                     actions: [
                       TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Hủy')),
-                      TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Xóa', style: TextStyle(color: AppColors.error))),
+                      TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text('Xóa', style: TextStyle(color: Theme.of(context).colorScheme.error))),
                     ],
                   ),
                 );
@@ -865,7 +843,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   await eventProvider.deleteEvent(event.id);
                 }
               },
-              child: const Icon(Icons.delete_outline, color: AppColors.outline, size: 20),
+              child: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.outline, size: 20),
             ),
           ],
         ),

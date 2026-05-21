@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/helpers/responsive_helper.dart';
@@ -16,6 +15,7 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     final items = [
       (Icons.home_outlined, Icons.home, AppStrings.navHome),
       (Icons.calendar_month_outlined, Icons.calendar_month, AppStrings.navCalendar),
@@ -26,7 +26,7 @@ class AppBottomNav extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: cs.surface,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -58,7 +58,7 @@ class AppBottomNav extends StatelessWidget {
                   vertical: AppDimensions.xs + 2,
                 ),
                 decoration: BoxDecoration(
-                  color: isActive ? AppColors.primaryContainer : Colors.transparent,
+                  color: isActive ? cs.primaryContainer : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                 ),
                 child: Column(
@@ -67,8 +67,8 @@ class AppBottomNav extends StatelessWidget {
                     Icon(
                       isActive ? items[index].$2 : items[index].$1,
                       color: isActive
-                          ? AppColors.onPrimaryContainer
-                          : AppColors.onSurfaceVariant,
+                          ? cs.onPrimaryContainer
+                          : cs.onSurfaceVariant,
                       size: ResponsiveHelper.iconSize(context, 24),
                     ),
                     const SizedBox(height: 2),
@@ -80,8 +80,8 @@ class AppBottomNav extends StatelessWidget {
                           fontSize: ResponsiveHelper.scaleFont(context, 11),
                           fontWeight: isActive ? FontWeight.w700 : FontWeight.w400,
                           color: isActive
-                              ? AppColors.onPrimaryContainer
-                              : AppColors.onSurfaceVariant,
+                              ? cs.onPrimaryContainer
+                              : cs.onSurfaceVariant,
                         ),
                       ),
                     ),

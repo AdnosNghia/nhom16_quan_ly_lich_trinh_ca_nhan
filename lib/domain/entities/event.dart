@@ -2,6 +2,7 @@ import 'subtask.dart';
 
 class Event {
   final String id;
+  final String userId;
   final String title;
   final String? description;
   final DateTime startTime;
@@ -18,6 +19,7 @@ class Event {
 
   const Event({
     this.id = '',
+    this.userId = '',
     required this.title,
     this.description,
     required this.startTime,
@@ -35,6 +37,7 @@ class Event {
 
   Event copyWith({
     String? id,
+    String? userId,
     String? title,
     String? description,
     DateTime? startTime,
@@ -51,6 +54,7 @@ class Event {
   }) {
     return Event(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       title: title ?? this.title,
       description: description ?? this.description,
       startTime: startTime ?? this.startTime,

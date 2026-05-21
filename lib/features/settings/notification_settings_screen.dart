@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../shared/widgets/app_toggle.dart';
 
@@ -20,17 +19,18 @@ class _NotificationSettingsScreenState
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'Thông báo',
           style: TextStyle(
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -39,7 +39,7 @@ class _NotificationSettingsScreenState
             padding: const EdgeInsets.only(right: 8),
             child: CircleAvatar(
               radius: 18,
-              backgroundColor: AppColors.surfaceContainer,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               child: const Icon(Icons.person_outline, size: 20),
             ),
           ),
@@ -52,7 +52,7 @@ class _NotificationSettingsScreenState
             Container(
               padding: const EdgeInsets.all(AppDimensions.lg),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusXl),
               ),
@@ -61,18 +61,18 @@ class _NotificationSettingsScreenState
                   Container(
                     padding: const EdgeInsets.all(AppDimensions.sm + 4),
                     decoration: BoxDecoration(
-                      color: AppColors.onPrimaryContainer.withValues(alpha: 0.2),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusMd),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.notifications_active,
                       size: 28,
-                      color: AppColors.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                   const SizedBox(width: AppDimensions.md),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -81,14 +81,14 @@ class _NotificationSettingsScreenState
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onPrimaryContainer,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ),
                         Text(
                           'Tùy chỉnh cách bạn nhận thông báo từ Schedulr.',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.onPrimaryContainer,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ],
@@ -138,31 +138,31 @@ class _NotificationSettingsScreenState
                   child: Container(
                     padding: const EdgeInsets.all(AppDimensions.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHigh,
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusXl),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.schedule,
-                            color: AppColors.primary, size: 28),
+                        Icon(Icons.schedule,
+                            color: Theme.of(context).colorScheme.primary, size: 28),
                         const SizedBox(height: AppDimensions.sm),
-                        const Text(
+                        Text(
                           'Giờ yên tĩnh',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Tạm dừng tất cả thông báo.',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -174,32 +174,32 @@ class _NotificationSettingsScreenState
                   child: Container(
                     padding: const EdgeInsets.all(AppDimensions.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryContainer,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusXl),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.emergency,
-                            color: AppColors.onSecondaryContainer,
+                        Icon(Icons.emergency,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                             size: 28),
                         const SizedBox(height: AppDimensions.sm),
-                        const Text(
+                        Text(
                           'Ưu tiên khẩn cấp',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),
-                        const Text(
+                        Text(
                           'Bỏ qua chế độ im lặng.',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),
                       ],
@@ -218,7 +218,7 @@ class _NotificationSettingsScreenState
   Widget _settingsGroup(String title, List<Widget> items) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -233,10 +233,10 @@ class _NotificationSettingsScreenState
             ),
             child: Text(
               title.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
                 letterSpacing: 1,
               ),
             ),
@@ -265,10 +265,10 @@ class _NotificationSettingsScreenState
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
+                color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: AppColors.primary, size: 22),
+              child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 22),
             ),
             const SizedBox(width: AppDimensions.md),
             Expanded(
@@ -278,18 +278,18 @@ class _NotificationSettingsScreenState
                     Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       subtitle,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

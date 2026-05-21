@@ -20,7 +20,8 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _loadUserFromFirestore(firebase_auth.User firebaseUser) async {
     try {
-      final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final doc = await _firestore.collection('users').doc(firebaseUser.uid).get()
+          .timeout(const Duration(seconds: 8));
       if (doc.exists) {
         _user = User.fromFirestore(doc.data()!);
       } else {
@@ -28,7 +29,7 @@ class AuthProvider extends ChangeNotifier {
           email: firebaseUser.email ?? '',
           name: firebaseUser.displayName ?? firebaseUser.email?.split('@').first ?? '',
         );
-        await _saveUserToFirestore(firebaseUser.uid);
+        _saveUserToFirestore(firebaseUser.uid); // fire-and-forget
       }
     } catch (_) {
       _user = User(
@@ -40,7 +41,10 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> _saveUserToFirestore(String uid) async {
     if (_user == null) return;
-    await _firestore.collection('users').doc(uid).set(_user!.toFirestore());
+    try {
+      await _firestore.collection('users').doc(uid).set(_user!.toFirestore())
+          .timeout(const Duration(seconds: 8));
+    } catch (_) {}
   }
 
   Future<void> checkLoginStatus() async {

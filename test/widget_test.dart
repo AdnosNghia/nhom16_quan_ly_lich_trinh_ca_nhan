@@ -8,10 +8,12 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:nhom16_quanlylichtrinhcanhan/main.dart';
+import 'package:nhom16_quanlylichtrinhcanhan/shared/providers/theme_provider.dart';
 
 void main() {
   testWidgets('App launches smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const SchedulrApp());
+    final themeProvider = ThemeProvider();
+    await tester.pumpWidget(SchedulrApp(themeProvider: themeProvider));
     expect(find.text('Schedulr'), findsOneWidget);
   });
 }
