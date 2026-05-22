@@ -6,6 +6,7 @@ import '../../core/constants/app_strings.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/category_provider.dart';
 import '../../domain/entities/event.dart';
+import '../../shared/widgets/app_header.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
@@ -15,6 +16,8 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
+  final Set<int> _expandedQuadrants = {};
+
   @override
   void initState() {
     super.initState();
@@ -28,38 +31,7 @@ class _TasksScreenState extends State<TasksScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.marginMobile,
-              ),
-              height: AppDimensions.headerHeight(context),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainer,
-                    child: const Icon(Icons.person_outline),
-                  ),
-                  const SizedBox(width: AppDimensions.sm + 4),
-                  Text(
-                    'Schedulr',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    color: Theme.of(context).colorScheme.primary,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
+            const AppHeader(),
             Expanded(
               child: Consumer<EventProvider>(
                 builder: (context, eventProvider, _) {
@@ -73,51 +45,104 @@ class _TasksScreenState extends State<TasksScreen> {
                   );
 
                   final delegateId = delegateCat?.id ?? '';
+
+                  // 1. ⚡ Làm ngay: Quan trọng & Khẩn cấp
+                  // - Không thuộc danh mục "Phân công"
+                  // - Chưa hoàn thành
+                  // - Đang diễn ra (now nằm giữa start và end) HOẶC sắp diễn ra (start trong 24h tới)
                   final doNow = eventProvider.events.where((e) {
-                    if (e.categoryId == delegateId) return false;
-                    if (e.isCompleted && e.endTime.isBefore(now)) return true;
-                    return (e.startTime.isAfter(now) &&
-                            e.startTime.isBefore(in24h)) ||
-                        (e.startTime.isBefore(now) && e.endTime.isAfter(now));
-                  }).toList();
-                  final schedule = eventProvider.events.where((e) {
-                    if (e.categoryId == delegateId) return false;
+                    if (e.categoryId == delegateId && delegateId.isNotEmpty) return false;
                     if (e.isCompleted) return false;
-                    return e.startTime.isAfter(in24h) &&
-                        e.startTime.isBefore(in7days);
-                  }).toList();
+                    final isOngoing = e.startTime.isBefore(now) && e.endTime.isAfter(now);
+                    final isUpcoming = e.startTime.isAfter(now) && e.startTime.isBefore(in24h);
+                    return isOngoing || isUpcoming;
+                  }).toList()
+                    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
+                  // 2. 📅 Lên lịch: Quan trọng nhưng Chưa khẩn cấp
+                  // - Không thuộc danh mục "Phân công"
+                  // - Chưa hoàn thành
+                  // - Bắt đầu sau 24h
+                  final schedule = eventProvider.events.where((e) {
+                    if (e.categoryId == delegateId && delegateId.isNotEmpty) return false;
+                    if (e.isCompleted) return false;
+                    return e.startTime.isAfter(in24h);
+                  }).toList()
+                    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
+                  // 3. 👥 Ủy thác: Danh mục "Phân công"
+                  // - Bắt buộc thuộc danh mục "Phân công"
+                  // - Không hiển thị việc đã quá hạn mà chưa hoàn thành
                   final delegate = eventProvider.events.where((e) {
-                    if (e.categoryId != delegateId) return false;
+                    if (delegateId.isEmpty || e.categoryId != delegateId) return false;
+                    // Ẩn việc quá hạn chưa hoàn thành
                     if (!e.isCompleted && e.endTime.isBefore(now)) return false;
                     return true;
-                  }).toList();
+                  }).toList()
+                    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
+                  // 4. 🗑️ Loại bỏ / Đã bỏ lỡ
+                  // - Chưa hoàn thành
+                  // - Đã quá hạn (endTime < now)
+                  // - Chỉ lấy các việc bỏ lỡ trong ngày hôm nay (từ 00:00)
                   final missed = eventProvider.events.where((e) {
                     return !e.isCompleted &&
                         e.endTime.isBefore(now) &&
                         e.endTime.isAfter(startOfToday);
-                  }).toList();
+                  }).toList()
+                    ..sort((a, b) => b.endTime.compareTo(a.endTime));
 
                   return SingleChildScrollView(
                     padding: const EdgeInsets.all(AppDimensions.marginMobile),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          AppStrings.eisenhowerTitle,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onSurface,
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppDimensions.lg,
+                            vertical: AppDimensions.md,
                           ),
-                        ),
-                        const SizedBox(height: AppDimensions.xs),
-                        Text(
-                          AppStrings.eisenhowerDesc,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onSurfaceVariant,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.assignment_outlined,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 24,
+                              ),
+                              const SizedBox(width: AppDimensions.md),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Tiến độ của bạn',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        fontWeight: FontWeight.w600,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Còn ${doNow.length + schedule.length + delegate.length} công việc cần hoàn thành',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: AppDimensions.lg),
@@ -125,27 +150,29 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.doNow,
                           icon: Icons.bolt,
                           count: '${doNow.length} Công việc',
-                          bgColor: Theme.of(context).colorScheme.primary,
-                          textColor: Theme.of(context).colorScheme.onPrimary,
-                          borderColor: Theme.of(
-                            context,
-                          ).colorScheme.primary.withValues(alpha: 0.1),
+                          bgColor: Colors.transparent,
+                          bgGradient: const LinearGradient(
+                            colors: [Color(0xFF0099CC), Color(0xFF0055AA)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          textColor: Colors.white,
+                          borderColor: Colors.transparent,
                           events: doNow,
-                          accentColor: Theme.of(context).colorScheme.primary,
+                          accentColor: const Color(0xFF0055AA),
                           quadrant: 0,
+                          hasGlow: true,
                         ),
                         const SizedBox(height: AppDimensions.md),
                         _buildQuadrant(
                           title: AppStrings.schedule,
                           icon: Icons.calendar_month,
                           count: '${schedule.length} Công việc',
-                          bgColor: Theme.of(context).colorScheme.secondary,
-                          textColor: Theme.of(context).colorScheme.onSecondary,
-                          borderColor: Theme.of(
-                            context,
-                          ).colorScheme.secondary.withValues(alpha: 0.1),
+                          bgColor: Theme.of(context).colorScheme.primaryContainer,
+                          textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+                          borderColor: Colors.transparent,
                           events: schedule,
-                          accentColor: Theme.of(context).colorScheme.secondary,
+                          accentColor: Theme.of(context).colorScheme.primary,
                           quadrant: 1,
                         ),
                         const SizedBox(height: AppDimensions.md),
@@ -153,13 +180,11 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.delegate,
                           icon: Icons.group,
                           count: '${delegate.length} Công việc',
-                          bgColor: Theme.of(context).colorScheme.tertiary,
-                          textColor: Theme.of(context).colorScheme.onTertiary,
-                          borderColor: Theme.of(
-                            context,
-                          ).colorScheme.tertiary.withValues(alpha: 0.1),
+                          bgColor: Theme.of(context).colorScheme.secondaryContainer,
+                          textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+                          borderColor: Colors.transparent,
                           events: delegate,
-                          accentColor: Theme.of(context).colorScheme.tertiary,
+                          accentColor: Theme.of(context).colorScheme.secondary,
                           quadrant: 2,
                         ),
                         const SizedBox(height: AppDimensions.md),
@@ -167,17 +192,11 @@ class _TasksScreenState extends State<TasksScreen> {
                           title: AppStrings.eliminate,
                           icon: Icons.delete,
                           count: '${missed.length} Công việc',
-                          bgColor: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerHighest,
-                          textColor: Theme.of(
-                            context,
-                          ).colorScheme.onSurfaceVariant,
-                          borderColor: Theme.of(
-                            context,
-                          ).colorScheme.outlineVariant,
+                          bgColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                          textColor: Theme.of(context).colorScheme.onSurfaceVariant,
+                          borderColor: Colors.transparent,
                           events: missed,
-                          accentColor: Theme.of(context).colorScheme.outline,
+                          accentColor: Theme.of(context).colorScheme.onSurfaceVariant,
                           quadrant: 3,
                           isStrikethrough: true,
                         ),
@@ -199,18 +218,35 @@ class _TasksScreenState extends State<TasksScreen> {
     required IconData icon,
     required String count,
     required Color bgColor,
+    Gradient? bgGradient,
     required Color textColor,
     required Color borderColor,
     required List<Event> events,
     required Color accentColor,
     required int quadrant,
     bool isStrikethrough = false,
+    bool hasGlow = false,
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-        border: Border.all(color: borderColor),
+        border: borderColor != Colors.transparent ? Border.all(color: borderColor) : null,
+        boxShadow: [
+          if (hasGlow)
+            BoxShadow(
+              color: accentColor.withValues(alpha: 0.3),
+              blurRadius: 15,
+              spreadRadius: 2,
+              offset: const Offset(0, 8),
+            )
+          else
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+        ],
       ),
       child: Column(
         children: [
@@ -222,7 +258,8 @@ class _TasksScreenState extends State<TasksScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(AppDimensions.md),
               decoration: BoxDecoration(
-                color: bgColor,
+                color: bgGradient == null ? bgColor : null,
+                gradient: bgGradient,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(AppDimensions.radiusXl),
                 ),
@@ -265,16 +302,59 @@ class _TasksScreenState extends State<TasksScreen> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(AppDimensions.md),
-            child: Column(
-              children: List.generate(
-                events.length,
-                (index) =>
-                    _buildEventRow(events[index], accentColor, isStrikethrough),
+          if (events.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(AppDimensions.md),
+              child: Column(
+                children: [
+                  ...List.generate(
+                    _expandedQuadrants.contains(quadrant)
+                        ? events.length
+                        : events.length.clamp(0, 3),
+                    (index) =>
+                        _buildEventRow(events[index], accentColor, isStrikethrough),
+                  ),
+                  if (events.length > 3)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (_expandedQuadrants.contains(quadrant)) {
+                            _expandedQuadrants.remove(quadrant);
+                          } else {
+                            _expandedQuadrants.add(quadrant);
+                          }
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: AppDimensions.sm),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _expandedQuadrants.contains(quadrant)
+                                  ? 'Thu gọn'
+                                  : 'Xem thêm ${events.length - 3} công việc',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: accentColor,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              _expandedQuadrants.contains(quadrant)
+                                  ? Icons.keyboard_arrow_up
+                                  : Icons.keyboard_arrow_down,
+                              size: 18,
+                              color: accentColor,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
-          ),
         ],
       ),
     );
@@ -308,12 +388,10 @@ class _TasksScreenState extends State<TasksScreen> {
       if (totalMinutes < 15) return 'Sắp $suffix';
     }
 
-    if (totalHours < 1) return 'Chưa đầy 1h nữa sẽ $suffix';
-    if (totalHours < 24) return 'còn $totalHours giờ nữa sẽ $suffix';
+    if (totalHours < 1) return 'Trong vài phút';
+    if (totalHours < 24) return 'Trong $totalHours giờ';
     final days = totalHours ~/ 24;
-    final hours = totalHours % 24;
-    if (hours == 0) return 'còn $days ngày nữa sẽ $suffix';
-    return 'còn $days ngày $hours giờ nữa sẽ $suffix';
+    return 'Trong $days ngày';
   }
 
   Widget _buildEventRow(Event event, Color accentColor, bool isStrikethrough) {

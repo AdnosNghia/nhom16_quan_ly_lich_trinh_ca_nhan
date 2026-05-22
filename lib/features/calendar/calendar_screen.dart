@@ -7,6 +7,7 @@ import '../../shared/providers/event_provider.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/subtask.dart';
 import 'event_detail_screen.dart';
+import '../../shared/widgets/app_header.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
@@ -19,7 +20,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
   int _viewIndex = 0;
   DateTime _currentMonth = DateTime.now();
   DateTime _selectedDate = DateTime.now();
-  final List<String> _views = ['Tháng', 'Tuần', 'Ngày'];
+  final List<String> _views = ['Tháng', 'Tuần'];
   final List<String> _weekdays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
   @override
@@ -62,36 +63,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.marginMobile,
-              ),
-              height: AppDimensions.headerHeight(context),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
-                    child: const Icon(Icons.person_outline, size: 18),
-                  ),
-                  const SizedBox(width: AppDimensions.sm + 4),
-                  Text(
-                    'Schedulr',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    color: Theme.of(context).colorScheme.primary,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
+            const AppHeader(),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppDimensions.marginMobile,
@@ -152,9 +124,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     child: Text(
                       _viewIndex == 0
                           ? 'Tháng ${_currentMonth.month} năm ${_currentMonth.year}'
-                          : _viewIndex == 1
-                              ? 'Tuần ${_getWeekStart(_selectedDate).day}/${_getWeekStart(_selectedDate).month} - ${_getWeekEnd(_getWeekStart(_selectedDate)).day}/${_getWeekEnd(_getWeekStart(_selectedDate)).month} năm ${_selectedDate.year}'
-                              : DateFormat("EEEE, 'ngày' d 'tháng' M", 'vi_VN').format(_selectedDate),
+                          : 'Tuần ${_getWeekStart(_selectedDate).day}/${_getWeekStart(_selectedDate).month} - ${_getWeekEnd(_getWeekStart(_selectedDate)).day}/${_getWeekEnd(_getWeekStart(_selectedDate)).month} năm ${_selectedDate.year}',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 20,
@@ -172,10 +142,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           setState(() {
                             if (_viewIndex == 0) {
                               _currentMonth = DateTime(_currentMonth.year, _currentMonth.month - 1);
-                            } else if (_viewIndex == 1) {
-                              _selectedDate = _selectedDate.subtract(const Duration(days: 7));
                             } else {
-                              _selectedDate = _selectedDate.subtract(const Duration(days: 1));
+                              _selectedDate = _selectedDate.subtract(const Duration(days: 7));
                             }
                           });
                           if (_viewIndex != 0) {
@@ -190,10 +158,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           setState(() {
                             if (_viewIndex == 0) {
                               _currentMonth = DateTime(_currentMonth.year, _currentMonth.month + 1);
-                            } else if (_viewIndex == 1) {
-                              _selectedDate = _selectedDate.add(const Duration(days: 7));
                             } else {
-                              _selectedDate = _selectedDate.add(const Duration(days: 1));
+                              _selectedDate = _selectedDate.add(const Duration(days: 7));
                             }
                           });
                           if (_viewIndex != 0) {
@@ -222,7 +188,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           _buildAgendaSection(eventProvider),
                         ],
                       );
-                    } else if (_viewIndex == 1) {
+                    } else {
                       return Column(
                         children: [
                           _buildWeekView(eventProvider),
@@ -230,8 +196,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           _buildAgendaSection(eventProvider),
                         ],
                       );
-                    } else {
-                      return _buildDayView(eventProvider);
                     }
                   },
                 ),
@@ -505,6 +469,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(width: AppDimensions.sm),
               if (!_selectedDate.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)))
                 FloatingActionButton.small(
+                  heroTag: null,
                   onPressed: () {
                     Navigator.of(context).pushNamed('/add_event', arguments: _selectedDate);
                   },
@@ -582,6 +547,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               SizedBox(width: AppDimensions.sm),
               if (!_selectedDate.isBefore(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)))
                 FloatingActionButton.small(
+                  heroTag: null,
                   onPressed: () {
                     Navigator.of(context).pushNamed('/add_event', arguments: _selectedDate);
                   },

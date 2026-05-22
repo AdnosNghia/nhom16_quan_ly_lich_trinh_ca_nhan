@@ -6,6 +6,7 @@ import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/category_provider.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/subtask.dart';
+import '../../shared/providers/notification_provider.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -56,6 +57,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       } else {
         final cats = context.read<CategoryProvider>().categories;
         if (cats.isNotEmpty) _selectedCategoryId = cats.first.id;
+        _selectedReminder = context.read<NotificationProvider>().defaultReminderMinutes;
         if (args is DateTime) {
           setState(() {
             _startDate = args;
@@ -113,7 +115,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       isAllDay: _isAllDay,
       categoryId: _selectedCategoryId,
       colorHex: category?.colorHex ?? (_editingEvent?.colorHex ?? 0xFF4D41DF),
-      reminderMinutes: [_selectedReminder],
+      reminderMinutes: context.read<NotificationProvider>().reminderEnabled ? [_selectedReminder] : [],
       subtasks: List.from(_subtasks),
     );
 
@@ -221,17 +223,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       decoration: InputDecoration(
                         hintText: AppStrings.eventName,
                         hintStyle: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
                           color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       ),
                       style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
@@ -241,12 +244,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       maxLines: 3,
                       decoration: InputDecoration(
                         hintText: 'Mô tả sự kiện...',
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                        contentPadding: const EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
@@ -255,13 +259,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       controller: _locationController,
                       decoration: InputDecoration(
                         hintText: 'Địa điểm hoặc link...',
-                        prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                        contentPadding: const EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
@@ -300,31 +305,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       ],
                     ),
                     const SizedBox(height: AppDimensions.md),
-                    Container(
-                      padding: const EdgeInsets.all(AppDimensions.md),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.check_circle_outline, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                          const SizedBox(width: AppDimensions.md),
-                          Expanded(
-                            child: Text(
-                              AppStrings.allDay,
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
-                            ),
-                          ),
-                          Switch(
-                            value: _isAllDay,
-                            onChanged: (v) => setState(() => _isAllDay = v),
-                            activeTrackColor: Theme.of(context).colorScheme.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.md),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -361,44 +341,46 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       },
                     ),
                     const SizedBox(height: AppDimensions.lg),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.reminder.toUpperCase(),
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1),
+                    if (context.watch<NotificationProvider>().reminderEnabled) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.reminder.toUpperCase(),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.sm),
-                    Row(
-                      children: [5, 15, 30].map((minutes) {
-                        final isSelected = _selectedReminder == minutes;
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: GestureDetector(
-                              onTap: () => setState(() => _selectedReminder = minutes),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm + 4),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainer,
-                                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                                ),
-                                child: Text(
-                                  '$minutes phút',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-                                    color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                      const SizedBox(height: AppDimensions.sm),
+                      Row(
+                        children: [5, 15, 30].map((minutes) {
+                          final isSelected = _selectedReminder == minutes;
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedReminder = minutes),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm + 4),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainer,
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                                  ),
+                                  child: Text(
+                                    '$minutes phút',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: AppDimensions.lg),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: AppDimensions.lg),
+                    ],
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

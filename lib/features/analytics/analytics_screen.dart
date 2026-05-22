@@ -6,6 +6,8 @@ import '../../core/constants/app_strings.dart';
 import '../../core/helpers/responsive_helper.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/category_provider.dart';
+import '../../shared/widgets/app_header.dart';
+import '../../shared/providers/auth_provider.dart';
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
@@ -31,23 +33,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppDimensions.marginMobile),
-              height: AppDimensions.headerHeight(context),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                    child: const Icon(Icons.person_outline, size: 18),
-                  ),
-                  const SizedBox(width: AppDimensions.sm + 4),
-                  Text('Schedulr', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.primary)),
-                  const Spacer(),
-                  IconButton(icon: const Icon(Icons.notifications_outlined), color: Theme.of(context).colorScheme.onSurfaceVariant, onPressed: () {}),
-                ],
-              ),
-            ),
+            const AppHeader(),
             Expanded(
               child: Consumer<EventProvider>(
                 builder: (context, eventProvider, _) {
@@ -155,11 +141,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   Widget _buildBarChart(BuildContext context, EventProvider eventProvider) {
     final now = DateTime.now();
-    final days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    final dayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
 
     // Compute actual completed event counts for the past 7 days
+    // and generate correct day labels
+    final days = <String>[];
     final counts = List.generate(7, (index) {
       final date = now.subtract(Duration(days: 6 - index));
+      days.add(dayLabels[date.weekday - 1]); // weekday: 1=Mon→T2, 7=Sun→CN
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
       return eventProvider.events.where((e) =>

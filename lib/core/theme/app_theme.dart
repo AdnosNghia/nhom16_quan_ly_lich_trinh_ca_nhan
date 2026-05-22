@@ -5,16 +5,16 @@ import '../constants/app_dimensions.dart';
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get lightTheme => buildTheme(Brightness.light, const Color(0xFF4D41DF));
+  static ThemeData get lightTheme => buildTheme(Brightness.light, const Color(0xFF0099CC));
 
-  static ThemeData get darkTheme => buildTheme(Brightness.dark, const Color(0xFF7B74FF));
+  static ThemeData get darkTheme => buildTheme(Brightness.dark, const Color(0xFF0099CC));
 
   static ThemeData buildTheme(Brightness brightness, Color colorSeed) {
     final isDark = brightness == Brightness.dark;
     final colorScheme = ColorScheme.fromSeed(
       seedColor: colorSeed,
       brightness: brightness,
-    );
+    ).copyWith(primary: colorSeed);
 
     final baseTheme = isDark ? ThemeData.dark() : ThemeData.light();
 

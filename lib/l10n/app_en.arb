@@ -1,0 +1,203 @@
+{
+  "@@locale": "en",
+
+  "appName": "Schedulr",
+  "splashSubtitle": "Initializing your workspace...",
+
+  "skip": "Skip",
+  "next": "Next",
+  "getStarted": "Get Started",
+
+  "loginTitle": "Schedulr",
+  "loginSubtitle": "Plan every day, simplify your life",
+  "googleSignIn": "Continue with Google",
+  "or": "OR",
+  "emailLabel": "Email Address",
+  "passwordLabel": "Password",
+  "login": "Sign In",
+  "forgotPassword": "Forgot password?",
+  "noAccount": "Don't have an account?",
+  "signUp": "Sign Up",
+  "confirmPasswordLabel": "Confirm Password",
+  "fullNameLabel": "Full Name",
+  "hasAccount": "Already have an account?",
+  "processing": "Processing...",
+
+  "greetingMorning": "Good morning,",
+  "greetingAfternoon": "Good afternoon,",
+  "greetingEvening": "Good evening,",
+  "progressToday": "Today's Progress",
+  "progressDesc": "You're doing great! Almost there.",
+  "priorityTasks": "Priority Tasks",
+  "upcomingEvents": "Upcoming Events",
+  "viewAll": "View All",
+  "viewCalendar": "View Calendar",
+  "tasksOf": "{completed} of {total} tasks",
+  "@tasksOf": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "navHome": "Home",
+  "navCalendar": "Calendar",
+  "navTasks": "Tasks",
+  "navAnalytics": "Analytics",
+  "navSettings": "Settings",
+
+  "monthView": "Month",
+  "weekView": "Week",
+  "dayView": "Day",
+
+  "eisenhowerTitle": "Eisenhower Matrix",
+  "eisenhowerDesc": "Prioritize tasks based on urgency and importance.",
+  "doNow": "Do Now",
+  "schedule": "Schedule",
+  "delegateTask": "Delegate",
+  "eliminate": "Eliminate",
+
+  "weeklyOverview": "Weekly Overview",
+  "productivityScore": "Productivity Score",
+  "tasksCompleted": "Tasks Completed",
+  "timeDistribution": "Time Distribution",
+  "focusStats": "Focus Stats",
+  "activity30Days": "30-Day Activity",
+  "smartSuggestions": "Smart Suggestions",
+
+  "settings": "Settings",
+  "settingsSubtitle": "Manage your account and customize your experience.",
+  "accountInfo": "Account Information",
+  "security": "Security & Privacy",
+  "notificationConfig": "Notification Settings",
+  "appTheme": "App Theme",
+  "logout": "Sign Out",
+  "logoutConfirm": "Are you sure you want to sign out?",
+  "cancel": "Cancel",
+  "save": "Save",
+  "edit": "Edit",
+  "delete": "Delete",
+  "confirm": "Confirm",
+  "proBadge": "Pro Member",
+  "accountGroup": "Account",
+  "appGroup": "Application",
+  "versionInfo": "Schedulr Version 2.4.0 (Build 108)",
+  "copyright": "© 2024 Schedulr Inc.",
+
+  "addEvent": "Add Event",
+  "eventName": "Your event name...",
+  "start": "Start",
+  "end": "End",
+  "allDay": "All Day",
+  "category": "Category",
+  "reminder": "Reminder",
+  "subTasks": "Subtasks",
+  "addSubTask": "Add task",
+  "saveEvent": "Save Event",
+
+  "profileTitle": "Personal Profile",
+  "personalInfo": "Basic Information",
+  "securityAccount": "Security & Account",
+  "appCustomization": "App Customization",
+  "changePassword": "Change Password",
+  "changePasswordSub": "Update your password",
+  "twoFactorAuth": "Two-Factor Auth",
+  "twoFactorProtect": "Protect your account",
+  "twoFactorEnabled": "Enabled",
+  "twoFactorDisabled": "Disabled",
+  "loginHistory": "Login History",
+  "loginHistorySub": "Check devices",
+  "logoutSub": "End your session",
+  "darkMode": "Dark Mode",
+  "language": "Language",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+  "featureComingSoon": "Feature under development",
+  "notUpdated": "Not updated",
+  "user": "User",
+  "fullName": "Full Name",
+  "email": "Email",
+  "phoneNumber": "Phone Number",
+  "uid": "UID",
+
+  "weekProgress": "This Week's Progress",
+  "weekProgressDesc": "You've completed {percent}% of your goals.",
+  "@weekProgressDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "viewDetails": "View Details",
+
+  "editProfile": "Edit Profile",
+
+  "passwordResetSent": "Password reset email sent. Please check your inbox.",
+  "passwordResetFailed": "Failed to send email, please try again later",
+
+  "twoFactorTitle": "Two-Factor Authentication",
+  "twoFactorEnableMsg": "When enabled, you'll need to enter a 6-digit OTP code each time you sign in to verify your identity.",
+  "twoFactorDisableMsg": "Do you want to disable two-factor authentication? Your account will be less secure.",
+  "twoFactorEnabledSuccess": "Two-factor authentication enabled successfully",
+  "twoFactorDisabledSuccess": "Two-factor authentication disabled",
+  "enableAuth": "Enable",
+  "disable": "Disable",
+
+  "selectLanguage": "Select Language",
+  "languageChanged": "Language changed successfully",
+
+  "notificationTitle": "Notifications",
+  "managePreferences": "Manage Preferences",
+  "managePreferencesSub": "Customize how you receive notifications from Schedulr.",
+  "generalSettings": "General Settings",
+  "pushNotifications": "Push Notifications",
+  "pushNotificationsSub": "Receive instant notifications on lock screen",
+  "sound": "Sound",
+  "soundSub": "Play sound for new notifications",
+  "eventsCalendar": "Events & Calendar",
+  "eventReminder": "Event Reminder",
+  "eventReminderSub": "Notify 15 minutes before start",
+  "weeklyReport": "Weekly Report",
+  "weeklyReportSub": "Productivity summary on Monday morning",
+  "quietHours": "Quiet Hours",
+  "quietHoursSub": "Pause all notifications.",
+  "emergencyPriority": "Emergency Priority",
+  "emergencyPrioritySub": "Override silent mode.",
+  "testNotification": "Send Test Notification",
+
+  "loginHistoryTitle": "Login History",
+  "currentSession": "Current Session",
+  "previousSessions": "Previous Sessions",
+  "noLoginHistory": "No login history",
+  "clearHistory": "Clear History",
+  "clearHistoryConfirm": "Are you sure you want to clear all login history?",
+  "loginViaEmail": "Sign in via Email",
+  "loginViaGoogle": "Sign in via Google",
+  "justNow": "Just now",
+  "minutesAgo": "{minutes} minutes ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "hoursAgo": "{hours} hours ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "hours": { "type": "int" }
+    }
+  },
+  "daysAgo": "{days} days ago",
+  "@daysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+
+  "eventReminderNotifTitle": "Event Reminder",
+  "eventStartsIn": "Event \"{title}\" starts in {minutes} minutes",
+  "@eventStartsIn": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "minutes": { "type": "int" }
+    }
+  }
+}

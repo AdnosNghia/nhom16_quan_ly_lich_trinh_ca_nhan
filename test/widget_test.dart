@@ -9,11 +9,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:nhom16_quanlylichtrinhcanhan/main.dart';
 import 'package:nhom16_quanlylichtrinhcanhan/shared/providers/theme_provider.dart';
+import 'package:nhom16_quanlylichtrinhcanhan/shared/providers/locale_provider.dart';
+import 'package:nhom16_quanlylichtrinhcanhan/shared/providers/notification_provider.dart';
 
 void main() {
   testWidgets('App launches smoke test', (WidgetTester tester) async {
     final themeProvider = ThemeProvider();
-    await tester.pumpWidget(SchedulrApp(themeProvider: themeProvider));
+    final localeProvider = LocaleProvider();
+    final notificationProvider = NotificationProvider();
+    await tester.pumpWidget(SchedulrApp(
+      themeProvider: themeProvider,
+      localeProvider: localeProvider,
+      notificationProvider: notificationProvider,
+    ));
     expect(find.text('Schedulr'), findsOneWidget);
   });
 }

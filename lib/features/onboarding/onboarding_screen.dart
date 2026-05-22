@@ -128,6 +128,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         const SizedBox(height: AppDimensions.md),
                         Text(
                           item.desc,
+                          maxLines: 3,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: ResponsiveHelper.scaleFont(context, 14).clamp(12, 18),

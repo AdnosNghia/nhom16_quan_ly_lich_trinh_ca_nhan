@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../data/repositories/event_repository.dart';
+import '../../core/services/notification_service.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/subtask.dart';
 
@@ -104,6 +105,9 @@ class EventProvider extends ChangeNotifier {
     _refreshCurrentDay();
     notifyListeners();
     _repository.insertEvent(eventWithUser).catchError((_) {});
+
+    // Schedule notification reminder
+    NotificationService().scheduleEventReminder(eventWithUser);
   }
 
   Future<void> updateEvent(Event event) async {
@@ -114,6 +118,10 @@ class EventProvider extends ChangeNotifier {
     _refreshCurrentDay();
     notifyListeners();
     _repository.updateEvent(event).catchError((_) {});
+
+    // Re-schedule notification: cancel old, schedule new
+    await NotificationService().cancelEventReminder(event.id);
+    NotificationService().scheduleEventReminder(event);
   }
 
   Future<void> deleteEvent(String id) async {
@@ -121,6 +129,9 @@ class EventProvider extends ChangeNotifier {
     _refreshCurrentDay();
     notifyListeners();
     _repository.deleteEvent(id).catchError((_) {});
+
+    // Cancel notification for deleted event
+    NotificationService().cancelEventReminder(id);
   }
 
   Future<void> toggleEventComplete(String id) async {

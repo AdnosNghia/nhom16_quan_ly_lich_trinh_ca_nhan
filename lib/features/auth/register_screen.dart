@@ -71,6 +71,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     
@@ -103,16 +105,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Column(
                     children: [
                       Container(
-                        width: 64,
-                        height: 64,
+                        width: 56,
+                        height: 56,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF0099CC), Color(0xFF0055AA)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFF0099CC).withValues(alpha: 0.3),
+                              blurRadius: 12,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.calendar_month,
-                          color: Theme.of(context).colorScheme.onPrimaryContainer,
-                          size: 36,
+                          color: Colors.white,
+                          size: 32,
                         ),
                       ),
                       const SizedBox(height: AppDimensions.md),
@@ -127,57 +140,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: AppDimensions.xs),
                       Text(
-                        'Lên kế hoạch mỗi ngày, đơn giản hóa cuộc sống',
-                        overflow: TextOverflow.ellipsis,
+                        'Đơn giản hóa cuộc sống của bạn',
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 14,
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                        textAlign: TextAlign.center,
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: AppDimensions.lg),
-                  // Social Register
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Tính năng đang phát triển'),
-                            behavior: SnackBarBehavior.floating,
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.g_mobiledata),
-                      label: const Text('Đăng ký với Google'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Theme.of(context).colorScheme.onSurface,
-                        side: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppDimensions.md),
-                  Row(
-                    children: [
-                      Expanded(child: Divider(color: Theme.of(context).colorScheme.outlineVariant)),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md),
-                        child: Text(
-                          'HOẶC',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.outline,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Divider(color: Theme.of(context).colorScheme.outlineVariant)),
                     ],
                   ),
                   const SizedBox(height: AppDimensions.lg),
@@ -187,11 +157,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Họ và tên',
                       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                   ),
@@ -203,11 +174,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Địa chỉ Email',
                       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                   ),
@@ -219,18 +191,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Mật khẩu',
                       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        borderSide: BorderSide.none,
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Theme.of(context).colorScheme.outline,
+                          _obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
@@ -244,18 +215,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                       labelText: 'Xác nhận mật khẩu',
                       labelStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      filled: true,
+                      fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                      contentPadding: const EdgeInsets.all(16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        borderSide: BorderSide.none,
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _obscureConfirm
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                          color: Theme.of(context).colorScheme.outline,
+                          _obscureConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
                       ),
@@ -271,26 +241,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                   const SizedBox(height: AppDimensions.lg),
                   // Register button
-                  SizedBox(
+                  Container(
                     width: double.infinity,
-                    child: ElevatedButton.icon(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF0099CC), Color(0xFF0055AA)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFF0099CC).withValues(alpha: 0.3),
+                          blurRadius: 16,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
                       onPressed: _isLoading ? null : _handleRegister,
-                      icon: _isLoading
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                        ),
+                      ),
+                      child: _isLoading
                           ? const SizedBox(
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                             )
-                          : const Icon(Icons.arrow_forward),
-                      label: Text(_isLoading ? 'Đang xử lý...' : 'Đăng ký'),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                        ),
-                        elevation: 4,
-                        shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-                      ),
+                          : const Text(
+                              'Đăng ký',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: AppDimensions.md),

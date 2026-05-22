@@ -51,8 +51,8 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: RadialGradient(
             center: Alignment.center,
             colors: [
-              Color(0xFF7B74FF),
-              Color(0xFF4D41DF),
+              Color(0xFF0099CC),
+              Color(0xFF0055AA),
             ],
             radius: 1.5,
           ),

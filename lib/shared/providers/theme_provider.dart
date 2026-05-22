@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
   static const _keyColorSeed = 'schedulr_color_seed';
 
   ThemeMode _themeMode = ThemeMode.light;
-  int _colorSeed = 0xFF4D41DF;
+  int _colorSeed = 0xFF0099CC;
   ThemeData? _cachedLight;
   ThemeData? _cachedDark;
 
@@ -34,7 +34,13 @@ class ThemeProvider extends ChangeNotifier {
     }
     final savedColor = prefs.getInt(_keyColorSeed);
     if (savedColor != null) {
-      _colorSeed = savedColor;
+      // If the saved color is the old purple default, upgrade it to the new ocean blue default
+      if (savedColor == 0xFF4D41DF || savedColor == 0xFF7B74FF) {
+        _colorSeed = 0xFF0099CC;
+        await _persist();
+      } else {
+        _colorSeed = savedColor;
+      }
     }
     _invalidateCache();
   }

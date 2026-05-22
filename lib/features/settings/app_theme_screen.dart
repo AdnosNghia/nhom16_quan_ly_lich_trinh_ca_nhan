@@ -21,6 +21,7 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
     const Color(0xFFFF9800),
     const Color(0xFF607D8B),
     const Color(0xFF673AB7),
+    const Color(0xFF0099CC), // Xanh dương Glow / Fluid Gradient (Đậm hơn 15%)
   ];
 
   @override

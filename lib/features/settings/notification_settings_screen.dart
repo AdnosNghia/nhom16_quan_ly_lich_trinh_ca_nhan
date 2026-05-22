@@ -1,25 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/constants/app_dimensions.dart';
+import '../../core/services/notification_service.dart';
+import '../../shared/providers/notification_provider.dart';
 import '../../shared/widgets/app_toggle.dart';
 
-class NotificationSettingsScreen extends StatefulWidget {
+class NotificationSettingsScreen extends StatelessWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  State<NotificationSettingsScreen> createState() =>
-      _NotificationSettingsScreenState();
-}
-
-class _NotificationSettingsScreenState
-    extends State<NotificationSettingsScreen> {
-  bool _pushEnabled = true;
-  bool _soundEnabled = true;
-  bool _reminderEnabled = true;
-  bool _weeklyReportEnabled = false;
-
-  @override
   Widget build(BuildContext context) {
-    
+    final notifProvider = context.watch<NotificationProvider>();
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -28,7 +22,7 @@ class _NotificationSettingsScreenState
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Thông báo',
+          l.notificationTitle,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w700,
@@ -77,7 +71,7 @@ class _NotificationSettingsScreenState
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Quản lý tùy chọn',
+                          l.managePreferences,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
@@ -85,7 +79,7 @@ class _NotificationSettingsScreenState
                           ),
                         ),
                         Text(
-                          'Tùy chỉnh cách bạn nhận thông báo từ Schedulr.',
+                          l.managePreferencesSub,
                           style: TextStyle(
                             fontSize: 14,
                             color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -98,37 +92,79 @@ class _NotificationSettingsScreenState
               ),
             ),
             const SizedBox(height: AppDimensions.lg),
-            _settingsGroup('Cài đặt chung', [
+            _settingsGroup(context, l.generalSettings, [
               _toggleItem(
+                context,
                 Icons.cell_tower,
-                'Thông báo đẩy',
-                'Nhận thông báo tức thì trên màn hình khóa',
-                _pushEnabled,
-                (v) => setState(() => _pushEnabled = v),
+                l.pushNotifications,
+                l.pushNotificationsSub,
+                notifProvider.pushEnabled,
+                (v) => notifProvider.togglePush(v),
               ),
               _toggleItem(
+                context,
                 Icons.volume_up,
-                'Âm báo',
-                'Phát âm thanh khi có thông báo mới',
-                _soundEnabled,
-                (v) => setState(() => _soundEnabled = v),
+                l.sound,
+                l.soundSub,
+                notifProvider.soundEnabled,
+                (v) => notifProvider.toggleSound(v),
               ),
             ]),
             const SizedBox(height: AppDimensions.md),
-            _settingsGroup('Sự kiện & Lịch', [
-              _toggleItem(
-                Icons.event_note,
-                'Nhắc nhở trước sự kiện',
-                'Thông báo 15 phút trước khi bắt đầu',
-                _reminderEnabled,
-                (v) => setState(() => _reminderEnabled = v),
+            _settingsGroup(context, l.eventsCalendar, [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _toggleItem(
+                    context,
+                    Icons.event_note,
+                    l.eventReminder,
+                    'Thông báo ${notifProvider.defaultReminderMinutes} phút trước khi bắt đầu',
+                    notifProvider.reminderEnabled,
+                    (v) => notifProvider.toggleReminder(v),
+                  ),
+                  if (notifProvider.reminderEnabled)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md).copyWith(bottom: AppDimensions.md),
+                      child: Row(
+                        children: [5, 15, 30].map((minutes) {
+                          final isSelected = notifProvider.defaultReminderMinutes == minutes;
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: GestureDetector(
+                                onTap: () => notifProvider.setDefaultReminderMinutes(minutes),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainer,
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                                  ),
+                                  child: Text(
+                                    '$minutes phút',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                ],
               ),
               _toggleItem(
+                context,
                 Icons.analytics,
-                'Báo cáo hàng tuần',
-                'Tổng kết năng suất vào sáng Thứ Hai',
-                _weeklyReportEnabled,
-                (v) => setState(() => _weeklyReportEnabled = v),
+                l.weeklyReport,
+                l.weeklyReportSub,
+                notifProvider.weeklyReportEnabled,
+                (v) => notifProvider.toggleWeeklyReport(v),
               ),
             ]),
             const SizedBox(height: AppDimensions.md),
@@ -149,7 +185,7 @@ class _NotificationSettingsScreenState
                             color: Theme.of(context).colorScheme.primary, size: 28),
                         const SizedBox(height: AppDimensions.sm),
                         Text(
-                          'Giờ yên tĩnh',
+                          l.quietHours,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
@@ -158,7 +194,7 @@ class _NotificationSettingsScreenState
                           ),
                         ),
                         Text(
-                          'Tạm dừng tất cả thông báo.',
+                          l.quietHoursSub,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
@@ -186,7 +222,7 @@ class _NotificationSettingsScreenState
                             size: 28),
                         const SizedBox(height: AppDimensions.sm),
                         Text(
-                          'Ưu tiên khẩn cấp',
+                          l.emergencyPriority,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
@@ -195,7 +231,7 @@ class _NotificationSettingsScreenState
                           ),
                         ),
                         Text(
-                          'Bỏ qua chế độ im lặng.',
+                          l.emergencyPrioritySub,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
@@ -208,14 +244,16 @@ class _NotificationSettingsScreenState
                 ),
               ],
             ),
-            const SizedBox(height: AppDimensions.xxl),
+            const SizedBox(height: AppDimensions.lg),
+            // Test notification button
+
           ],
         ),
       ),
     );
   }
 
-  Widget _settingsGroup(String title, List<Widget> items) {
+  Widget _settingsGroup(BuildContext context, String title, List<Widget> items) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surfaceContainerLowest,
@@ -248,6 +286,7 @@ class _NotificationSettingsScreenState
   }
 
   Widget _toggleItem(
+    BuildContext context,
     IconData icon,
     String title,
     String subtitle,

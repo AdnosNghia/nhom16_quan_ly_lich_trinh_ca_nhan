@@ -11,7 +11,7 @@ class AppStrings {
 
   // Auth
   static const String loginTitle = 'Schedulr';
-  static const String loginSubtitle = 'Lên kế hoạch mỗi ngày, đơn giản hóa cuộc sống';
+  static const String loginSubtitle = 'Đơn giản hóa cuộc sống của bạn';
   static const String googleSignIn = 'Tiếp tục với Google';
   static const String or = 'HOẶC';
   static const String emailLabel = 'Địa chỉ Email';

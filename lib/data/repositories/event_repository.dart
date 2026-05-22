@@ -14,14 +14,18 @@ class EventRepository {
   }
 
   Stream<List<Event>> watchAllEvents(String userId) {
-    return _userQuery(userId).orderBy('startTime').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    return _userQuery(userId).snapshots().map((snapshot) {
+      final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+      list.sort((a, b) => a.startTime.compareTo(b.startTime));
+      return list;
     });
   }
 
   Future<List<Event>> getAllEvents(String userId) async {
-    final snapshot = await _userQuery(userId).orderBy('startTime').get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final snapshot = await _userQuery(userId).get();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
   Future<List<Event>> getEventsForDate(String userId, DateTime date) async {
@@ -30,28 +34,30 @@ class EventRepository {
     final snapshot = await _userQuery(userId)
         .where('startTime', isLessThan: endOfDay.toIso8601String())
         .where('endTime', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
-        .orderBy('startTime')
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
   Future<List<Event>> getEventsForRange(String userId, DateTime start, DateTime end) async {
     final snapshot = await _userQuery(userId)
         .where('startTime', isGreaterThanOrEqualTo: start.toIso8601String())
         .where('startTime', isLessThan: end.toIso8601String())
-        .orderBy('startTime')
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
   Future<List<Event>> getUpcomingEvents(String userId, {int limit = 5}) async {
     final now = DateTime.now().toIso8601String();
     final snapshot = await _userQuery(userId)
         .where('startTime', isGreaterThanOrEqualTo: now)
-        .orderBy('startTime')
-        .limit(limit)
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list.take(limit).toList();
   }
 
   Future<Event?> getEventById(String id) async {

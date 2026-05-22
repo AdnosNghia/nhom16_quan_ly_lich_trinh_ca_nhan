@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import '../../l10n/app_localizations.dart';
+import '../../l10n/l10n.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/helpers/responsive_helper.dart';
 import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/theme_provider.dart';
+import '../../shared/providers/locale_provider.dart';
 import '../../domain/entities/user.dart';
 
 class AccountInfoScreen extends StatelessWidget {
@@ -15,8 +18,10 @@ class AccountInfoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthProvider>();
     final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
     final user = authProvider.user;
     final firebaseUser = authProvider.firebaseUser;
+    final l = AppLocalizations.of(context)!;
     
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -26,7 +31,7 @@ class AccountInfoScreen extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Hồ sơ cá nhân',
+          l.profileTitle,
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w700,
@@ -111,7 +116,7 @@ class AccountInfoScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Bảo mật & Tài khoản',
+                    l.securityAccount,
                     style: TextStyle(
                       fontSize: ResponsiveHelper.scaleFont(context, 18).clamp(16, 22),
                       fontWeight: FontWeight.w600,
@@ -123,85 +128,7 @@ class AccountInfoScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppDimensions.md),
-            // Preferences
-            Container(
-              padding: const EdgeInsets.all(AppDimensions.lg),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                borderRadius:
-                    BorderRadius.circular(AppDimensions.radiusXl),
-                border:
-                    Border.all(color: Theme.of(context).colorScheme.outlineVariant.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Tùy chỉnh ứng dụng',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: AppDimensions.md),
-                  _preferenceItem(
-                    context,
-                    Icons.notifications_outlined,
-                    'Cấu hình thông báo',
-                    trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/notification_settings');
-                    },
-                  ),
-                  _preferenceItem(
-                    context,
-                    Icons.palette_outlined,
-                    'Giao diện ứng dụng',
-                    trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    onTap: () {
-                      Navigator.of(context).pushNamed('/app_theme');
-                    },
-                  ),
-                  _preferenceItem(
-                    context,
-                    Icons.dark_mode_outlined,
-                    'Chế độ tối (Dark Mode)',
-                    trailing: Switch(
-                      value: themeProvider.themeMode == ThemeMode.dark,
-                      onChanged: (v) {
-                        themeProvider.setThemeMode(
-                          v ? ThemeMode.dark : ThemeMode.light,
-                        );
-                      },
-                      activeTrackColor: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  _preferenceItem(
-                    context,
-                    Icons.language_outlined,
-                    'Ngôn ngữ',
-                    trailing: Text(
-                      'Tiếng Việt',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Tính năng đang phát triển'),
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: AppDimensions.xl),
             const SizedBox(height: AppDimensions.xxl),
           ],
         ),
@@ -211,27 +138,28 @@ class AccountInfoScreen extends StatelessWidget {
 
   Widget _buildSecurityButtons(BuildContext context, AuthProvider authProvider) {
     final isSmall = MediaQuery.of(context).size.width < 420;
+    final l = AppLocalizations.of(context)!;
     if (isSmall) {
       return Column(
         children: [
           SizedBox(
             width: double.infinity,
-            child: _securityButton(context, Icons.lock_outlined, 'Đổi mật khẩu', 'Cập nhật mật khẩu mới', onTap: () => _handleChangePassword(context)),
+            child: _securityButton(context, Icons.lock_outlined, l.changePassword, l.changePasswordSub, onTap: () => _handleChangePassword(context)),
           ),
           const SizedBox(height: AppDimensions.sm),
           SizedBox(
             width: double.infinity,
-            child: _securityButton(context, Icons.verified_user_outlined, 'Xác thực 2 lớp', 'Bảo vệ tài khoản', onTap: () => _handleComingSoon(context)),
+            child: _securityButton(context, Icons.verified_user_outlined, l.twoFactorAuth, authProvider.user?.twoFactorEnabled == true ? l.twoFactorEnabled : l.twoFactorProtect, onTap: () => _handleToggleTwoFactor(context, authProvider)),
           ),
           const SizedBox(height: AppDimensions.sm),
           SizedBox(
             width: double.infinity,
-            child: _securityButton(context, Icons.history_outlined, 'Lịch sử đăng nhập', 'Kiểm tra thiết bị', onTap: () => _handleComingSoon(context)),
+            child: _securityButton(context, Icons.history_outlined, l.loginHistory, l.loginHistorySub, onTap: () => Navigator.of(context).pushNamed('/login_history')),
           ),
           const SizedBox(height: AppDimensions.sm),
           SizedBox(
             width: double.infinity,
-            child: _securityButton(context, Icons.logout, 'Đăng xuất', 'Kết thúc phiên làm việc', isDestructive: true, onTap: () => _handleLogout(context, authProvider)),
+            child: _securityButton(context, Icons.logout, l.logout, l.logoutSub, isDestructive: true, onTap: () => _handleLogout(context, authProvider)),
           ),
         ],
       );
@@ -240,19 +168,128 @@ class AccountInfoScreen extends StatelessWidget {
       spacing: AppDimensions.md,
       runSpacing: AppDimensions.md,
       children: [
-        _securityButton(context, Icons.lock_outlined, 'Đổi mật khẩu', 'Cập nhật mật khẩu mới', onTap: () => _handleChangePassword(context)),
-        _securityButton(context, Icons.verified_user_outlined, 'Xác thực 2 lớp', 'Bảo vệ tài khoản', onTap: () => _handleComingSoon(context)),
-        _securityButton(context, Icons.history_outlined, 'Lịch sử đăng nhập', 'Kiểm tra thiết bị', onTap: () => _handleComingSoon(context)),
-        _securityButton(context, Icons.logout, 'Đăng xuất', 'Kết thúc phiên làm việc', isDestructive: true, onTap: () => _handleLogout(context, authProvider)),
+        _securityButton(context, Icons.lock_outlined, l.changePassword, l.changePasswordSub, onTap: () => _handleChangePassword(context)),
+        _securityButton(context, Icons.verified_user_outlined, l.twoFactorAuth, authProvider.user?.twoFactorEnabled == true ? l.twoFactorEnabled : l.twoFactorProtect, onTap: () => _handleToggleTwoFactor(context, authProvider)),
+        _securityButton(context, Icons.history_outlined, l.loginHistory, l.loginHistorySub, onTap: () => Navigator.of(context).pushNamed('/login_history')),
+        _securityButton(context, Icons.logout, l.logout, l.logoutSub, isDestructive: true, onTap: () => _handleLogout(context, authProvider)),
       ],
     );
   }
 
-  void _handleComingSoon(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Tính năng đang phát triển'),
-        behavior: SnackBarBehavior.floating,
+
+
+  void _handleToggleTwoFactor(BuildContext context, AuthProvider authProvider) {
+    final isEnabled = authProvider.user?.twoFactorEnabled == true;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              isEnabled ? Icons.shield_outlined : Icons.verified_user_outlined,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Xác thực 2 lớp',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppDimensions.md),
+              decoration: BoxDecoration(
+                color: isEnabled
+                    ? Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.3)
+                    : Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isEnabled ? Icons.check_circle : Icons.info_outline,
+                    size: 20,
+                    color: isEnabled
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    isEnabled ? 'Đang bật' : 'Đang tắt',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: isEnabled
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppDimensions.md),
+            Text(
+              isEnabled
+                  ? 'Bạn có muốn tắt xác thực 2 lớp? Tài khoản sẽ bớt an toàn hơn.'
+                  : 'Khi bật xác thực 2 lớp, mỗi lần đăng nhập bạn sẽ cần nhập thêm mã OTP 6 số để xác minh danh tính.',
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(
+              'Hủy',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final success = await authProvider.toggleTwoFactor(!isEnabled);
+              if (!ctx.mounted) return;
+              Navigator.of(ctx).pop();
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      !isEnabled
+                          ? 'Đã bật xác thực 2 lớp thành công'
+                          : 'Đã tắt xác thực 2 lớp',
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isEnabled
+                  ? Theme.of(context).colorScheme.error
+                  : Theme.of(context).colorScheme.primary,
+              foregroundColor: isEnabled
+                  ? Theme.of(context).colorScheme.onError
+                  : Theme.of(context).colorScheme.onPrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              ),
+            ),
+            child: Text(isEnabled ? 'Tắt' : 'Bật xác thực'),
+          ),
+        ],
       ),
     );
   }
@@ -404,13 +441,11 @@ class AccountInfoScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                _infoField(context, 'Họ và tên', user?.name ?? 'Alex'),
+                _infoField(context, 'Họ và tên', user?.name ?? 'Chưa cập nhật'),
                 Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                _infoField(context, 'Email', user?.email ?? 'adnostitanic0001@gmail.com'),
+                _infoField(context, 'Email', user?.email ?? 'Chưa cập nhật'),
                 Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                _infoField(context, 'Số điện thoại', '+84 123 456 789'),
-                Divider(height: 32, thickness: 1, color: Theme.of(context).colorScheme.outlineVariant),
-                _infoField(context, 'Ngày sinh', '01/01/2000'),
+                _infoField(context, 'Số điện thoại', (user?.phoneNumber != null && user!.phoneNumber!.isNotEmpty) ? user.phoneNumber! : 'Chưa cập nhật'),
               ],
             ),
           ),
@@ -458,9 +493,9 @@ class AccountInfoScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                _infoField(context, 'Email', user?.email ?? ''),
+                _infoField(context, 'Email', user?.email ?? 'Chưa cập nhật'),
                 _infoField(context, 'UID', firebaseUser?.uid ?? ''),
-                _infoField(context, 'Số điện thoại', user?.phoneNumber ?? 'Chưa có'),
+                _infoField(context, 'Số điện thoại', (user?.phoneNumber != null && user!.phoneNumber!.isNotEmpty) ? user.phoneNumber! : 'Chưa cập nhật'),
               ],
             ),
           ),
@@ -564,37 +599,6 @@ class AccountInfoScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _preferenceItem(
-      BuildContext context, IconData icon, String title, {Widget? trailing, VoidCallback? onTap}) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppDimensions.md,
-          vertical: AppDimensions.sm + 4,
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Theme.of(context).colorScheme.onSurfaceVariant),
-            const SizedBox(width: AppDimensions.md),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ),
-            ?trailing,
           ],
         ),
       ),

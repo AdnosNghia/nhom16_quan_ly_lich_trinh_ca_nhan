@@ -8,6 +8,7 @@ import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../domain/entities/event.dart';
 import '../calendar/event_detail_screen.dart';
+import '../../shared/widgets/app_header.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -43,50 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.marginMobile,
-                vertical: AppDimensions.sm,
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                    child: const Icon(Icons.person_outline),
-                  ),
-                  const SizedBox(width: AppDimensions.sm + 4),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Chào buổi sáng,',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          context.watch<AuthProvider>().user?.name ?? 'Alex',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
+            const AppHeader(),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -113,6 +71,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           Navigator.of(context).pushNamed('/add_event');
         },

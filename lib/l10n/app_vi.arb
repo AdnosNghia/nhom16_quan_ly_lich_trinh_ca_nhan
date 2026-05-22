@@ -1,0 +1,203 @@
+{
+  "@@locale": "vi",
+
+  "appName": "Schedulr",
+  "splashSubtitle": "Đang khởi tạo không gian làm việc...",
+
+  "skip": "Bỏ qua",
+  "next": "Tiếp theo",
+  "getStarted": "Bắt đầu",
+
+  "loginTitle": "Schedulr",
+  "loginSubtitle": "Đơn giản hóa cuộc sống của bạn",
+  "googleSignIn": "Tiếp tục với Google",
+  "or": "HOẶC",
+  "emailLabel": "Địa chỉ Email",
+  "passwordLabel": "Mật khẩu",
+  "login": "Đăng nhập",
+  "forgotPassword": "Quên mật khẩu?",
+  "noAccount": "Chưa có tài khoản?",
+  "signUp": "Đăng ký",
+  "confirmPasswordLabel": "Xác nhận mật khẩu",
+  "fullNameLabel": "Họ và tên",
+  "hasAccount": "Đã có tài khoản?",
+  "processing": "Đang xử lý...",
+
+  "greetingMorning": "Chào buổi sáng,",
+  "greetingAfternoon": "Chào buổi chiều,",
+  "greetingEvening": "Chào buổi tối,",
+  "progressToday": "Tiến độ hôm nay",
+  "progressDesc": "Bạn đang làm rất tốt! Sắp hoàn thành rồi.",
+  "priorityTasks": "Công việc ưu tiên",
+  "upcomingEvents": "Sự kiện sắp tới",
+  "viewAll": "Xem tất cả",
+  "viewCalendar": "Xem Lịch",
+  "tasksOf": "{completed} trên {total} công việc",
+  "@tasksOf": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "navHome": "Trang chủ",
+  "navCalendar": "Lịch",
+  "navTasks": "Công việc",
+  "navAnalytics": "Thống kê",
+  "navSettings": "Cài đặt",
+
+  "monthView": "Tháng",
+  "weekView": "Tuần",
+  "dayView": "Ngày",
+
+  "eisenhowerTitle": "Ma trận Eisenhower",
+  "eisenhowerDesc": "Ưu tiên các công việc dựa trên mức độ khẩn cấp và quan trọng.",
+  "doNow": "Làm ngay",
+  "schedule": "Lên lịch",
+  "delegateTask": "Ủy thác",
+  "eliminate": "Loại bỏ",
+
+  "weeklyOverview": "Tổng quan tuần",
+  "productivityScore": "Điểm hiệu suất",
+  "tasksCompleted": "Hoàn thành công việc",
+  "timeDistribution": "Phân bổ thời gian",
+  "focusStats": "Thống kê tập trung",
+  "activity30Days": "Hoạt động 30 ngày",
+  "smartSuggestions": "Gợi ý thông minh",
+
+  "settings": "Cài đặt",
+  "settingsSubtitle": "Quản lý tài khoản và tùy chỉnh trải nghiệm của bạn.",
+  "accountInfo": "Thông tin tài khoản",
+  "security": "Bảo mật & Quyền riêng tư",
+  "notificationConfig": "Cấu hình thông báo",
+  "appTheme": "Giao diện ứng dụng",
+  "logout": "Đăng xuất",
+  "logoutConfirm": "Bạn có chắc muốn đăng xuất?",
+  "cancel": "Hủy",
+  "save": "Lưu",
+  "edit": "Chỉnh sửa",
+  "delete": "Xóa",
+  "confirm": "Xác nhận",
+  "proBadge": "Thành viên Pro",
+  "accountGroup": "Tài khoản",
+  "appGroup": "Ứng dụng",
+  "versionInfo": "Schedulr Phiên bản 2.4.0 (Build 108)",
+  "copyright": "© 2024 Schedulr Inc.",
+
+  "addEvent": "Thêm Sự Kiện",
+  "eventName": "Tên sự kiện của bạn...",
+  "start": "Bắt đầu",
+  "end": "Kết thúc",
+  "allDay": "Cả ngày",
+  "category": "Danh mục",
+  "reminder": "Nhắc nhở",
+  "subTasks": "Công việc con",
+  "addSubTask": "Thêm việc",
+  "saveEvent": "Lưu Sự Kiện",
+
+  "profileTitle": "Hồ sơ cá nhân",
+  "personalInfo": "Thông tin cơ bản",
+  "securityAccount": "Bảo mật & Tài khoản",
+  "appCustomization": "Tùy chỉnh ứng dụng",
+  "changePassword": "Đổi mật khẩu",
+  "changePasswordSub": "Cập nhật mật khẩu mới",
+  "twoFactorAuth": "Xác thực 2 lớp",
+  "twoFactorProtect": "Bảo vệ tài khoản",
+  "twoFactorEnabled": "Đang bật",
+  "twoFactorDisabled": "Đang tắt",
+  "loginHistory": "Lịch sử đăng nhập",
+  "loginHistorySub": "Kiểm tra thiết bị",
+  "logoutSub": "Kết thúc phiên làm việc",
+  "darkMode": "Chế độ tối (Dark Mode)",
+  "language": "Ngôn ngữ",
+  "vietnamese": "Tiếng Việt",
+  "english": "English",
+  "featureComingSoon": "Tính năng đang phát triển",
+  "notUpdated": "Chưa cập nhật",
+  "user": "Người dùng",
+  "fullName": "Họ và tên",
+  "email": "Email",
+  "phoneNumber": "Số điện thoại",
+  "uid": "UID",
+
+  "weekProgress": "Tiến độ tuần này",
+  "weekProgressDesc": "Bạn đã hoàn thành {percent}% mục tiêu đã đề ra.",
+  "@weekProgressDesc": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+  "viewDetails": "Xem chi tiết",
+
+  "editProfile": "Chỉnh sửa thông tin",
+
+  "passwordResetSent": "Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra hộp thư.",
+  "passwordResetFailed": "Gửi email thất bại, vui lòng thử lại sau",
+
+  "twoFactorTitle": "Xác thực 2 lớp",
+  "twoFactorEnableMsg": "Khi bật xác thực 2 lớp, mỗi lần đăng nhập bạn sẽ cần nhập thêm mã OTP 6 số để xác minh danh tính.",
+  "twoFactorDisableMsg": "Bạn có muốn tắt xác thực 2 lớp? Tài khoản sẽ bớt an toàn hơn.",
+  "twoFactorEnabledSuccess": "Đã bật xác thực 2 lớp thành công",
+  "twoFactorDisabledSuccess": "Đã tắt xác thực 2 lớp",
+  "enableAuth": "Bật xác thực",
+  "disable": "Tắt",
+
+  "selectLanguage": "Chọn ngôn ngữ",
+  "languageChanged": "Đã đổi ngôn ngữ thành công",
+
+  "notificationTitle": "Thông báo",
+  "managePreferences": "Quản lý tùy chọn",
+  "managePreferencesSub": "Tùy chỉnh cách bạn nhận thông báo từ Schedulr.",
+  "generalSettings": "Cài đặt chung",
+  "pushNotifications": "Thông báo đẩy",
+  "pushNotificationsSub": "Nhận thông báo tức thì trên màn hình khóa",
+  "sound": "Âm báo",
+  "soundSub": "Phát âm thanh khi có thông báo mới",
+  "eventsCalendar": "Sự kiện & Lịch",
+  "eventReminder": "Nhắc nhở trước sự kiện",
+  "eventReminderSub": "Thông báo 15 phút trước khi bắt đầu",
+  "weeklyReport": "Báo cáo hàng tuần",
+  "weeklyReportSub": "Tổng kết năng suất vào sáng Thứ Hai",
+  "quietHours": "Giờ yên tĩnh",
+  "quietHoursSub": "Tạm dừng tất cả thông báo.",
+  "emergencyPriority": "Ưu tiên khẩn cấp",
+  "emergencyPrioritySub": "Bỏ qua chế độ im lặng.",
+  "testNotification": "Gửi thông báo test",
+
+  "loginHistoryTitle": "Lịch sử đăng nhập",
+  "currentSession": "Phiên hiện tại",
+  "previousSessions": "Phiên đăng nhập trước",
+  "noLoginHistory": "Chưa có lịch sử đăng nhập",
+  "clearHistory": "Xóa lịch sử",
+  "clearHistoryConfirm": "Bạn có chắc muốn xóa toàn bộ lịch sử đăng nhập?",
+  "loginViaEmail": "Đăng nhập qua Email",
+  "loginViaGoogle": "Đăng nhập qua Google",
+  "justNow": "Vừa xong",
+  "minutesAgo": "{minutes} phút trước",
+  "@minutesAgo": {
+    "placeholders": {
+      "minutes": { "type": "int" }
+    }
+  },
+  "hoursAgo": "{hours} giờ trước",
+  "@hoursAgo": {
+    "placeholders": {
+      "hours": { "type": "int" }
+    }
+  },
+  "daysAgo": "{days} ngày trước",
+  "@daysAgo": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+
+  "eventReminderNotifTitle": "Nhắc nhở sự kiện",
+  "eventStartsIn": "Sự kiện \"{title}\" bắt đầu sau {minutes} phút",
+  "@eventStartsIn": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "minutes": { "type": "int" }
+    }
+  }
+}
