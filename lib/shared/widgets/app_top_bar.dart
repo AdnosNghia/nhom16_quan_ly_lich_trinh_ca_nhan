@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 
 class AppTopBar extends StatelessWidget {
@@ -18,6 +17,7 @@ class AppTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppDimensions.marginMobile,
@@ -30,24 +30,24 @@ class AppTopBar extends StatelessWidget {
           if (leading == null && showNotification)
             CircleAvatar(
               radius: 20,
-              backgroundColor: AppColors.surfaceContainer,
+              backgroundColor: cs.surfaceContainer,
             ),
           if (leading == null && showNotification)
             const SizedBox(width: AppDimensions.sm + 4),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+                color: cs.primary,
               ),
             ),
           ),
           if (showNotification)
             IconButton(
               icon: const Icon(Icons.notifications_outlined),
-              color: AppColors.primary,
+              color: cs.primary,
               onPressed: () {},
             ),
           if (actions != null) ...actions!,

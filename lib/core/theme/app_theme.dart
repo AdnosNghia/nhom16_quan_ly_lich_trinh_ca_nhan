@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../constants/app_colors.dart';
 import '../constants/app_dimensions.dart';
 
 class AppTheme {
   AppTheme._();
 
-  static ThemeData get lightTheme => buildTheme(Brightness.light, AppColors.primary);
+  static ThemeData get lightTheme => buildTheme(Brightness.light, const Color(0xFF0099CC));
 
-  static ThemeData get darkTheme => buildTheme(Brightness.dark, AppColors.primaryDarkAccent);
+  static ThemeData get darkTheme => buildTheme(Brightness.dark, const Color(0xFF0099CC));
 
   static ThemeData buildTheme(Brightness brightness, Color colorSeed) {
     final isDark = brightness == Brightness.dark;
     final colorScheme = ColorScheme.fromSeed(
       seedColor: colorSeed,
       brightness: brightness,
-    );
+    ).copyWith(primary: colorSeed);
 
     final baseTheme = isDark ? ThemeData.dark() : ThemeData.light();
 
@@ -23,22 +22,22 @@ class AppTheme {
       useMaterial3: true,
       fontFamily: 'Plus Jakarta Sans',
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       appBarTheme: AppBarTheme(
-        backgroundColor: isDark ? AppColors.backgroundDark : AppColors.background,
-        foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.onBackground,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         elevation: 0,
         centerTitle: false,
         titleTextStyle: GoogleFonts.plusJakartaSans(
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          color: isDark ? AppColors.textPrimaryDark : AppColors.onBackground,
+          color: colorScheme.onSurface,
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceContainerLowest,
+        backgroundColor: colorScheme.surface,
         selectedItemColor: colorScheme.primary,
-        unselectedItemColor: isDark ? AppColors.outlineVariant : AppColors.onSurfaceVariant,
+        unselectedItemColor: colorScheme.onSurfaceVariant,
         type: BottomNavigationBarType.fixed,
         elevation: 8,
       ),
@@ -55,27 +54,48 @@ class AppTheme {
           ),
         ),
       ),
+      cardTheme: CardThemeData(
+        color: colorScheme.surfaceContainerLowest,
+        elevation: 0,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colorScheme.surfaceContainerHigh,
+      ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: colorScheme.inverseSurface,
+        contentTextStyle: TextStyle(color: colorScheme.onInverseSurface),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return colorScheme.onPrimary;
+          return colorScheme.outline;
+        }),
+        trackColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) return colorScheme.primary;
+          return colorScheme.surfaceContainerHighest;
+        }),
+      ),
       textTheme: GoogleFonts.plusJakartaSansTextTheme(
         baseTheme.textTheme.copyWith(
           headlineLarge: GoogleFonts.plusJakartaSans(
             fontSize: 24,
             fontWeight: FontWeight.w700,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.onSurface,
+            color: colorScheme.onSurface,
           ),
           headlineMedium: GoogleFonts.plusJakartaSans(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.onSurface,
+            color: colorScheme.onSurface,
           ),
           bodyMedium: GoogleFonts.plusJakartaSans(
             fontSize: 14,
             fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.textPrimaryDark : AppColors.onSurface,
+            color: colorScheme.onSurface,
           ),
           labelSmall: GoogleFonts.plusJakartaSans(
             fontSize: 12,
             fontWeight: FontWeight.w400,
-            color: isDark ? AppColors.outlineVariant : AppColors.onSurfaceVariant,
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
       ),

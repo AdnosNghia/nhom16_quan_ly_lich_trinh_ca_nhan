@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 
 class AppToggle extends StatelessWidget {
@@ -14,6 +13,7 @@ class AppToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: () => onChanged?.call(!value),
       child: AnimatedContainer(
@@ -21,7 +21,7 @@ class AppToggle extends StatelessWidget {
         width: 44,
         height: 24,
         decoration: BoxDecoration(
-          color: value ? AppColors.primary : AppColors.outlineVariant,
+          color: value ? cs.primary : cs.outlineVariant,
           borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
         ),
         alignment: value ? Alignment.centerRight : Alignment.centerLeft,
@@ -29,8 +29,8 @@ class AppToggle extends StatelessWidget {
         child: Container(
           width: 20,
           height: 20,
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: BoxDecoration(
+            color: value ? cs.onPrimary : cs.surface,
             shape: BoxShape.circle,
           ),
         ),

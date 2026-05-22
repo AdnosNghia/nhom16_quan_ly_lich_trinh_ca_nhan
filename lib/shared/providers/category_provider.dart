@@ -17,8 +17,8 @@ class CategoryProvider extends ChangeNotifier {
     }
     if (_categories.length < 8) {
       try {
-        await _seedMissingCategories();
-        _categories = await _repository.getAllCategories().timeout(const Duration(seconds: 15));
+        await _seedMissingCategories().timeout(const Duration(seconds: 10));
+        _categories = await _repository.getAllCategories().timeout(const Duration(seconds: 10));
       } catch (_) {}
     }
     notifyListeners();

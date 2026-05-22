@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../shared/providers/theme_provider.dart';
 
@@ -22,6 +21,7 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
     const Color(0xFFFF9800),
     const Color(0xFF607D8B),
     const Color(0xFF673AB7),
+    const Color(0xFF0099CC), // Xanh dương Glow / Fluid Gradient (Đậm hơn 15%)
   ];
 
   @override
@@ -57,24 +57,25 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: cs.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+          icon: Icon(Icons.arrow_back, color: cs.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'Giao diện',
-          style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w700),
+          style: TextStyle(color: cs.primary, fontWeight: FontWeight.w700),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
             child: CircleAvatar(
               radius: 16,
-              backgroundColor: AppColors.primaryContainer,
-              child: const Icon(Icons.person, size: 20),
+              backgroundColor: cs.primaryContainer,
+              child: Icon(Icons.person, size: 20, color: cs.onPrimaryContainer),
             ),
           ),
         ],
@@ -84,27 +85,27 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Chế độ hiển thị', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.onSurface)),
+            Text('Chế độ hiển thị', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: cs.onSurface)),
             const SizedBox(height: AppDimensions.xs),
-            const Text('Chọn cách Schedulr hiển thị trên thiết bị của bạn.', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: AppColors.onSurfaceVariant)),
+            Text('Chọn cách Schedulr hiển thị trên thiết bị của bạn.', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant)),
             const SizedBox(height: AppDimensions.md),
             Row(
               children: [
-                _themeCard(Icons.light_mode, 'Sáng', 0),
+                _themeCard(cs, Icons.light_mode, 'Sáng', 0),
                 const SizedBox(width: AppDimensions.md),
-                _themeCard(Icons.dark_mode, 'Tối', 1),
+                _themeCard(cs, Icons.dark_mode, 'Tối', 1),
                 const SizedBox(width: AppDimensions.md),
-                _themeCard(Icons.brightness_auto, 'Hệ thống', 2),
+                _themeCard(cs, Icons.brightness_auto, 'Hệ thống', 2),
               ],
             ),
             const SizedBox(height: AppDimensions.xl),
-            const Text('Màu chủ đạo', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.onSurface)),
+            Text('Màu chủ đạo', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: cs.onSurface)),
             const SizedBox(height: AppDimensions.xs),
-            const Text('Cá nhân hóa ứng dụng với màu sắc yêu thích của bạn.', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: AppColors.onSurfaceVariant)),
+            Text('Cá nhân hóa ứng dụng với màu sắc yêu thích của bạn.', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: cs.onSurfaceVariant)),
             const SizedBox(height: AppDimensions.md),
             Container(
               padding: const EdgeInsets.all(AppDimensions.lg),
-              decoration: BoxDecoration(color: AppColors.surfaceContainerLow, borderRadius: BorderRadius.circular(AppDimensions.radiusXl)),
+              decoration: BoxDecoration(color: cs.surfaceContainerLow, borderRadius: BorderRadius.circular(AppDimensions.radiusXl)),
               child: Wrap(
                 spacing: AppDimensions.md,
                 runSpacing: AppDimensions.md,
@@ -118,7 +119,7 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
                         color: _colors[index],
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: _selectedColor == index ? AppColors.primary.withValues(alpha: 0.3) : Colors.transparent,
+                          color: _selectedColor == index ? cs.primary.withValues(alpha: 0.3) : Colors.transparent,
                           width: _selectedColor == index ? 4 : 0,
                         ),
                       ),
@@ -146,7 +147,7 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
     );
   }
 
-  Widget _themeCard(IconData icon, String label, int index) {
+  Widget _themeCard(ColorScheme cs, IconData icon, String label, int index) {
     final isSelected = _selectedTheme == index;
     return Expanded(
       child: GestureDetector(
@@ -154,16 +155,16 @@ class _AppThemeScreenState extends State<AppThemeScreen> {
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.lg),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.surfaceContainer : AppColors.surfaceContainerLowest,
+            color: isSelected ? cs.surfaceContainerHigh : cs.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-            border: Border.all(color: isSelected ? AppColors.primary : Colors.transparent, width: 2),
+            border: Border.all(color: isSelected ? cs.primary : Colors.transparent, width: 2),
           ),
           child: Column(
             children: [
-              Icon(icon, size: 32, color: isSelected ? AppColors.primary : AppColors.onSurfaceVariant),
+              Icon(icon, size: 32, color: isSelected ? cs.primary : cs.onSurfaceVariant),
               const SizedBox(height: AppDimensions.sm),
-              Text(label, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400, color: isSelected ? AppColors.primary : AppColors.onSurfaceVariant)),
-              if (isSelected) const Padding(padding: EdgeInsets.only(top: 4), child: Icon(Icons.check_circle, color: AppColors.primary, size: 20)),
+              Text(label, style: TextStyle(fontSize: 12, fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400, color: isSelected ? cs.primary : cs.onSurfaceVariant)),
+              if (isSelected) Padding(padding: const EdgeInsets.only(top: 4), child: Icon(Icons.check_circle, color: cs.primary, size: 20)),
             ],
           ),
         ),

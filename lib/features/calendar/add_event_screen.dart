@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
 import '../../shared/providers/event_provider.dart';
 import '../../shared/providers/category_provider.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/entities/subtask.dart';
+import '../../shared/providers/notification_provider.dart';
 
 class AddEventScreen extends StatefulWidget {
   const AddEventScreen({super.key});
@@ -57,6 +57,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       } else {
         final cats = context.read<CategoryProvider>().categories;
         if (cats.isNotEmpty) _selectedCategoryId = cats.first.id;
+        _selectedReminder = context.read<NotificationProvider>().defaultReminderMinutes;
         if (args is DateTime) {
           setState(() {
             _startDate = args;
@@ -114,7 +115,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       isAllDay: _isAllDay,
       categoryId: _selectedCategoryId,
       colorHex: category?.colorHex ?? (_editingEvent?.colorHex ?? 0xFF4D41DF),
-      reminderMinutes: [_selectedReminder],
+      reminderMinutes: context.read<NotificationProvider>().reminderEnabled ? [_selectedReminder] : [],
       subtasks: List.from(_subtasks),
     );
 
@@ -137,6 +138,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
       lastDate: DateTime(2035),
     );
     if (date == null) return;
+    if (!mounted) return;
     final time = await showTimePicker(
       context: context,
       initialTime: isStart ? _startTime : _endTime,
@@ -180,8 +182,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
@@ -194,15 +197,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.close),
-                    color: AppColors.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Text(
                     _isEditing ? 'Sửa Sự Kiện' : AppStrings.addEvent,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const Spacer(),
@@ -217,50 +220,53 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     TextField(
                       controller: _titleController,
                       autofocus: !_isEditing,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: AppStrings.eventName,
                         hintStyle: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.outlineVariant,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.outlineVariant,
                         ),
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
                         focusedBorder: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8),
                       ),
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w800,
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.sm),
                     TextField(
                       controller: _descriptionController,
                       maxLines: 3,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Mô tả sự kiện...',
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.outlineVariant),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.primary),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                        contentPadding: const EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.sm),
                     TextField(
                       controller: _locationController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: 'Địa điểm hoặc link...',
-                        prefixIcon: Icon(Icons.location_on, color: AppColors.onSurfaceVariant),
-                        border: OutlineInputBorder(),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.outlineVariant),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.primary),
+                        hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        prefixIcon: Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
+                        filled: true,
+                        fillColor: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                        contentPadding: const EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
@@ -281,7 +287,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           ),
                         ),
                         const SizedBox(width: AppDimensions.md),
-                        const Icon(Icons.arrow_forward, color: AppColors.primary),
+                        Icon(Icons.arrow_forward, color: Theme.of(context).colorScheme.primary),
                         const SizedBox(width: AppDimensions.md),
                         Expanded(
                           child: GestureDetector(
@@ -299,36 +305,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       ],
                     ),
                     const SizedBox(height: AppDimensions.md),
-                    Container(
-                      padding: const EdgeInsets.all(AppDimensions.md),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerLow,
-                        borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.check_circle_outline, color: AppColors.onSurfaceVariant),
-                          const SizedBox(width: AppDimensions.md),
-                          const Expanded(
-                            child: Text(
-                              AppStrings.allDay,
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.onSurface),
-                            ),
-                          ),
-                          Switch(
-                            value: _isAllDay,
-                            onChanged: (v) => setState(() => _isAllDay = v),
-                            activeTrackColor: AppColors.primary,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: AppDimensions.md),
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         AppStrings.category.toUpperCase(),
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.onSurfaceVariant, letterSpacing: 1),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1),
                       ),
                     ),
                     const SizedBox(height: AppDimensions.sm),
@@ -360,56 +341,58 @@ class _AddEventScreenState extends State<AddEventScreen> {
                       },
                     ),
                     const SizedBox(height: AppDimensions.lg),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        AppStrings.reminder.toUpperCase(),
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.onSurfaceVariant, letterSpacing: 1),
+                    if (context.watch<NotificationProvider>().reminderEnabled) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          AppStrings.reminder.toUpperCase(),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppDimensions.sm),
-                    Row(
-                      children: [5, 15, 30].map((minutes) {
-                        final isSelected = _selectedReminder == minutes;
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: GestureDetector(
-                              onTap: () => setState(() => _selectedReminder = minutes),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm + 4),
-                                decoration: BoxDecoration(
-                                  color: isSelected ? AppColors.primaryContainer : AppColors.surfaceContainer,
-                                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                                ),
-                                child: Text(
-                                  '$minutes phút',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-                                    color: isSelected ? AppColors.onPrimaryContainer : AppColors.onSurface,
+                      const SizedBox(height: AppDimensions.sm),
+                      Row(
+                        children: [5, 15, 30].map((minutes) {
+                          final isSelected = _selectedReminder == minutes;
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: GestureDetector(
+                                onTap: () => setState(() => _selectedReminder = minutes),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm + 4),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainer,
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                                  ),
+                                  child: Text(
+                                    '$minutes phút',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: AppDimensions.lg),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: AppDimensions.lg),
+                    ],
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           AppStrings.subTasks.toUpperCase(),
-                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.onSurfaceVariant, letterSpacing: 1),
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurfaceVariant, letterSpacing: 1),
                         ),
                         TextButton.icon(
                           onPressed: () => _subtaskFocusNode.requestFocus(),
                           icon: const Icon(Icons.add, size: 18),
                           label: const Text(AppStrings.addSubTask),
-                          style: TextButton.styleFrom(foregroundColor: AppColors.primary),
+                          style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.primary),
                         ),
                       ],
                     ),
@@ -421,9 +404,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     Container(
                       padding: const EdgeInsets.all(AppDimensions.md),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceContainerLowest,
+                        color: Theme.of(context).colorScheme.surfaceContainerLowest,
                         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                        border: Border.all(color: AppColors.surfaceVariant),
+                        border: Border.all(color: Theme.of(context).colorScheme.surfaceVariant),
                       ),
                       child: Row(
                         children: [
@@ -442,7 +425,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.add_circle, color: AppColors.primary),
+                            icon: Icon(Icons.add_circle, color: Theme.of(context).colorScheme.primary),
                             onPressed: _addSubtask,
                           ),
                         ],
@@ -459,7 +442,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 AppDimensions.marginMobile, AppDimensions.md,
               ),
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.05),
@@ -494,9 +477,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-        border: Border.all(color: AppColors.surfaceVariant),
+        border: Border.all(color: Theme.of(context).colorScheme.surfaceVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,13 +487,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: const TextStyle(fontSize: 12, color: AppColors.onSurfaceVariant)),
-              Icon(icon, size: 20, color: AppColors.primary),
+              Text(label, style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
             ],
           ),
           const SizedBox(height: AppDimensions.sm),
-          Text(date, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.onSurface)),
-          Text(time, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 14, color: AppColors.onSurfaceVariant)),
+          Text(date, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface)),
+          Text(time, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurfaceVariant)),
         ],
       ),
     );
@@ -520,16 +503,16 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-        border: Border.all(color: AppColors.surfaceVariant),
+        border: Border.all(color: Theme.of(context).colorScheme.surfaceVariant),
       ),
       child: Row(
         children: [
           Checkbox(
             value: completed,
             onChanged: (_) => _toggleSubtask(index),
-            activeColor: AppColors.primary,
+            activeColor: Theme.of(context).colorScheme.primary,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimensions.radiusXs)),
           ),
           Expanded(
@@ -538,7 +521,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 14,
-                color: completed ? AppColors.onSurfaceVariant : AppColors.onSurface,
+                color: completed ? Theme.of(context).colorScheme.onSurfaceVariant : Theme.of(context).colorScheme.onSurface,
                 decoration: completed ? TextDecoration.lineThrough : null,
               ),
             ),
@@ -547,7 +530,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
             onTap: () {
               setState(() => _subtasks.removeAt(index));
             },
-            child: const Icon(Icons.close, size: 18, color: AppColors.outlineVariant),
+            child: Icon(Icons.close, size: 18, color: Theme.of(context).colorScheme.outlineVariant),
           ),
         ],
       ),

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "494276483402",
+    "firebase_url": "https://schedulr-app-af569-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "schedulr-app-af569",
     "storage_bucket": "schedulr-app-af569.firebasestorage.app"
   },
@@ -12,7 +13,28 @@
           "package_name": "com.example.nhom16_quanlylichtrinhcanhan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "494276483402-8f7llnemdmgfeliqd32dl278m2sm2u2r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nhom16_quanlylichtrinhcanhan",
+            "certificate_hash": "10a2e9e2b28dffae3887bf6c3eeb5540b237f371"
+          }
+        },
+        {
+          "client_id": "494276483402-f16aiei856fqbc6u3fsns7p056l5b4u4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nhom16_quanlylichtrinhcanhan",
+            "certificate_hash": "632b2e900f8d3965aca8a6b4def2a8d0443b7bc1"
+          }
+        },
+        {
+          "client_id": "494276483402-njvr8b62kabe2p5a3r1c7a0tg4gkt1nb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCs1YUkHKlNw0eipcnU8T10YQMQ-DvLGag"
@@ -20,7 +42,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494276483402-njvr8b62kabe2p5a3r1c7a0tg4gkt1nb.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "494276483402-6lbnrlut5uanfmgsv8latj0o96fp7o93.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.nhom16Quanlylichtrinhcanhan"
+              }
+            }
+          ]
         }
       }
     }

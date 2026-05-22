@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/app_colors.dart';
+import 'package:provider/provider.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/constants/app_dimensions.dart';
+import '../../core/services/notification_service.dart';
+import '../../shared/providers/notification_provider.dart';
 import '../../shared/widgets/app_toggle.dart';
 
-class NotificationSettingsScreen extends StatefulWidget {
+class NotificationSettingsScreen extends StatelessWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  State<NotificationSettingsScreen> createState() =>
-      _NotificationSettingsScreenState();
-}
-
-class _NotificationSettingsScreenState
-    extends State<NotificationSettingsScreen> {
-  bool _pushEnabled = true;
-  bool _soundEnabled = true;
-  bool _reminderEnabled = true;
-  bool _weeklyReportEnabled = false;
-
-  @override
   Widget build(BuildContext context) {
+    final notifProvider = context.watch<NotificationProvider>();
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.onSurface),
+          icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Thông báo',
+        title: Text(
+          l.notificationTitle,
           style: TextStyle(
-            color: AppColors.primary,
+            color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -39,7 +33,7 @@ class _NotificationSettingsScreenState
             padding: const EdgeInsets.only(right: 8),
             child: CircleAvatar(
               radius: 18,
-              backgroundColor: AppColors.surfaceContainer,
+              backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
               child: const Icon(Icons.person_outline, size: 20),
             ),
           ),
@@ -52,7 +46,7 @@ class _NotificationSettingsScreenState
             Container(
               padding: const EdgeInsets.all(AppDimensions.lg),
               decoration: BoxDecoration(
-                color: AppColors.primaryContainer,
+                color: Theme.of(context).colorScheme.primaryContainer,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusXl),
               ),
@@ -61,34 +55,34 @@ class _NotificationSettingsScreenState
                   Container(
                     padding: const EdgeInsets.all(AppDimensions.sm + 4),
                     decoration: BoxDecoration(
-                      color: AppColors.onPrimaryContainer.withValues(alpha: 0.2),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusMd),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.notifications_active,
                       size: 28,
-                      color: AppColors.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                   const SizedBox(width: AppDimensions.md),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Quản lý tùy chọn',
+                          l.managePreferences,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onPrimaryContainer,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ),
                         Text(
-                          'Tùy chỉnh cách bạn nhận thông báo từ Schedulr.',
+                          l.managePreferencesSub,
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColors.onPrimaryContainer,
+                            color: Theme.of(context).colorScheme.onPrimaryContainer,
                           ),
                         ),
                       ],
@@ -98,37 +92,79 @@ class _NotificationSettingsScreenState
               ),
             ),
             const SizedBox(height: AppDimensions.lg),
-            _settingsGroup('Cài đặt chung', [
+            _settingsGroup(context, l.generalSettings, [
               _toggleItem(
+                context,
                 Icons.cell_tower,
-                'Thông báo đẩy',
-                'Nhận thông báo tức thì trên màn hình khóa',
-                _pushEnabled,
-                (v) => setState(() => _pushEnabled = v),
+                l.pushNotifications,
+                l.pushNotificationsSub,
+                notifProvider.pushEnabled,
+                (v) => notifProvider.togglePush(v),
               ),
               _toggleItem(
+                context,
                 Icons.volume_up,
-                'Âm báo',
-                'Phát âm thanh khi có thông báo mới',
-                _soundEnabled,
-                (v) => setState(() => _soundEnabled = v),
+                l.sound,
+                l.soundSub,
+                notifProvider.soundEnabled,
+                (v) => notifProvider.toggleSound(v),
               ),
             ]),
             const SizedBox(height: AppDimensions.md),
-            _settingsGroup('Sự kiện & Lịch', [
-              _toggleItem(
-                Icons.event_note,
-                'Nhắc nhở trước sự kiện',
-                'Thông báo 15 phút trước khi bắt đầu',
-                _reminderEnabled,
-                (v) => setState(() => _reminderEnabled = v),
+            _settingsGroup(context, l.eventsCalendar, [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _toggleItem(
+                    context,
+                    Icons.event_note,
+                    l.eventReminder,
+                    'Thông báo ${notifProvider.defaultReminderMinutes} phút trước khi bắt đầu',
+                    notifProvider.reminderEnabled,
+                    (v) => notifProvider.toggleReminder(v),
+                  ),
+                  if (notifProvider.reminderEnabled)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.md).copyWith(bottom: AppDimensions.md),
+                      child: Row(
+                        children: [5, 15, 30].map((minutes) {
+                          final isSelected = notifProvider.defaultReminderMinutes == minutes;
+                          return Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: GestureDetector(
+                                onTap: () => notifProvider.setDefaultReminderMinutes(minutes),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: isSelected ? Theme.of(context).colorScheme.primaryContainer : Theme.of(context).colorScheme.surfaceContainer,
+                                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                                  ),
+                                  child: Text(
+                                    '$minutes phút',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                                      color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                ],
               ),
               _toggleItem(
+                context,
                 Icons.analytics,
-                'Báo cáo hàng tuần',
-                'Tổng kết năng suất vào sáng Thứ Hai',
-                _weeklyReportEnabled,
-                (v) => setState(() => _weeklyReportEnabled = v),
+                l.weeklyReport,
+                l.weeklyReportSub,
+                notifProvider.weeklyReportEnabled,
+                (v) => notifProvider.toggleWeeklyReport(v),
               ),
             ]),
             const SizedBox(height: AppDimensions.md),
@@ -138,31 +174,31 @@ class _NotificationSettingsScreenState
                   child: Container(
                     padding: const EdgeInsets.all(AppDimensions.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceContainerHigh,
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusXl),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.schedule,
-                            color: AppColors.primary, size: 28),
+                        Icon(Icons.schedule,
+                            color: Theme.of(context).colorScheme.primary, size: 28),
                         const SizedBox(height: AppDimensions.sm),
-                        const Text(
-                          'Giờ yên tĩnh',
+                        Text(
+                          l.quietHours,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onSurface,
+                            color: Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
-                        const Text(
-                          'Tạm dừng tất cả thông báo.',
+                        Text(
+                          l.quietHoursSub,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -174,32 +210,32 @@ class _NotificationSettingsScreenState
                   child: Container(
                     padding: const EdgeInsets.all(AppDimensions.lg),
                     decoration: BoxDecoration(
-                      color: AppColors.secondaryContainer,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
                       borderRadius: BorderRadius.circular(
                           AppDimensions.radiusXl),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.emergency,
-                            color: AppColors.onSecondaryContainer,
+                        Icon(Icons.emergency,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                             size: 28),
                         const SizedBox(height: AppDimensions.sm),
-                        const Text(
-                          'Ưu tiên khẩn cấp',
+                        Text(
+                          l.emergencyPriority,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),
-                        const Text(
-                          'Bỏ qua chế độ im lặng.',
+                        Text(
+                          l.emergencyPrioritySub,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.onSecondaryContainer,
+                            color: Theme.of(context).colorScheme.onSecondaryContainer,
                           ),
                         ),
                       ],
@@ -208,17 +244,19 @@ class _NotificationSettingsScreenState
                 ),
               ],
             ),
-            const SizedBox(height: AppDimensions.xxl),
+            const SizedBox(height: AppDimensions.lg),
+            // Test notification button
+
           ],
         ),
       ),
     );
   }
 
-  Widget _settingsGroup(String title, List<Widget> items) {
+  Widget _settingsGroup(BuildContext context, String title, List<Widget> items) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerLowest,
+        color: Theme.of(context).colorScheme.surfaceContainerLowest,
         borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
       ),
       child: Column(
@@ -233,10 +271,10 @@ class _NotificationSettingsScreenState
             ),
             child: Text(
               title.toUpperCase(),
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: AppColors.primary,
+                color: Theme.of(context).colorScheme.primary,
                 letterSpacing: 1,
               ),
             ),
@@ -248,6 +286,7 @@ class _NotificationSettingsScreenState
   }
 
   Widget _toggleItem(
+    BuildContext context,
     IconData icon,
     String title,
     String subtitle,
@@ -265,10 +304,10 @@ class _NotificationSettingsScreenState
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerHigh,
+                color: Theme.of(context).colorScheme.surfaceContainerHigh,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: AppColors.primary, size: 22),
+              child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 22),
             ),
             const SizedBox(width: AppDimensions.md),
             Expanded(
@@ -278,18 +317,18 @@ class _NotificationSettingsScreenState
                     Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     Text(
                       subtitle,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],

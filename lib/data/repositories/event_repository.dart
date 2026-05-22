@@ -7,45 +7,57 @@ import '../../domain/entities/subtask.dart';
 class EventRepository {
   final CollectionReference _events = FirebaseFirestore.instance.collection('events');
 
-  Stream<List<Event>> watchAllEvents() {
-    return _events.orderBy('startTime').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+  // ---- Queries filtered by userId ----
+
+  Query _userQuery(String userId) {
+    return _events.where('userId', isEqualTo: userId);
+  }
+
+  Stream<List<Event>> watchAllEvents(String userId) {
+    return _userQuery(userId).snapshots().map((snapshot) {
+      final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+      list.sort((a, b) => a.startTime.compareTo(b.startTime));
+      return list;
     });
   }
 
-  Future<List<Event>> getAllEvents() async {
-    final snapshot = await _events.orderBy('startTime').get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+  Future<List<Event>> getAllEvents(String userId) async {
+    final snapshot = await _userQuery(userId).get();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
-  Future<List<Event>> getEventsForDate(DateTime date) async {
+  Future<List<Event>> getEventsForDate(String userId, DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
-    final snapshot = await _events
+    final snapshot = await _userQuery(userId)
         .where('startTime', isLessThan: endOfDay.toIso8601String())
         .where('endTime', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
-        .orderBy('startTime')
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
-  Future<List<Event>> getEventsForRange(DateTime start, DateTime end) async {
-    final snapshot = await _events
+  Future<List<Event>> getEventsForRange(String userId, DateTime start, DateTime end) async {
+    final snapshot = await _userQuery(userId)
         .where('startTime', isGreaterThanOrEqualTo: start.toIso8601String())
         .where('startTime', isLessThan: end.toIso8601String())
-        .orderBy('startTime')
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list;
   }
 
-  Future<List<Event>> getUpcomingEvents({int limit = 5}) async {
+  Future<List<Event>> getUpcomingEvents(String userId, {int limit = 5}) async {
     final now = DateTime.now().toIso8601String();
-    final snapshot = await _events
+    final snapshot = await _userQuery(userId)
         .where('startTime', isGreaterThanOrEqualTo: now)
-        .orderBy('startTime')
-        .limit(limit)
         .get();
-    return snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    final list = snapshot.docs.map((doc) => _eventFromDoc(doc)).toList();
+    list.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return list.take(limit).toList();
   }
 
   Future<Event?> getEventById(String id) async {
@@ -59,6 +71,7 @@ class EventRepository {
     final now = DateTime.now().toIso8601String();
     await _events.doc(id).set({
       'id': id,
+      'userId': event.userId,
       'title': event.title,
       'description': event.description,
       'startTime': event.startTime.toIso8601String(),
@@ -136,10 +149,10 @@ class EventRepository {
     });
   }
 
-  Future<int> getCompletedCountForDate(DateTime date) async {
+  Future<int> getCompletedCountForDate(String userId, DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
-    final snapshot = await _events
+    final snapshot = await _userQuery(userId)
         .where('isCompleted', isEqualTo: true)
         .where('startTime', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
         .where('startTime', isLessThan: endOfDay.toIso8601String())
@@ -147,18 +160,18 @@ class EventRepository {
     return snapshot.docs.length;
   }
 
-  Future<int> getTotalCountForDate(DateTime date) async {
+  Future<int> getTotalCountForDate(String userId, DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
-    final snapshot = await _events
+    final snapshot = await _userQuery(userId)
         .where('startTime', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
         .where('startTime', isLessThan: endOfDay.toIso8601String())
         .get();
     return snapshot.docs.length;
   }
 
-  Future<Map<String, int>> getCategoryDistribution() async {
-    final snapshot = await _events.get();
+  Future<Map<String, int>> getCategoryDistribution(String userId) async {
+    final snapshot = await _userQuery(userId).get();
     final map = <String, int>{};
     for (final doc in snapshot.docs) {
       final data = doc.data() as Map<String, dynamic>;
@@ -186,10 +199,10 @@ class EventRepository {
     }).toList();
   }
 
-  Future<Map<String, int>> getSubtaskCountsForDate(DateTime date) async {
+  Future<Map<String, int>> getSubtaskCountsForDate(String userId, DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
     final endOfDay = startOfDay.add(const Duration(days: 1));
-    final snapshot = await _events
+    final snapshot = await _userQuery(userId)
         .where('startTime', isLessThan: endOfDay.toIso8601String())
         .where('endTime', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
         .get();
@@ -205,6 +218,7 @@ class EventRepository {
     final data = doc.data() as Map<String, dynamic>;
     return Event(
       id: doc.id,
+      userId: data['userId'] as String? ?? '',
       title: data['title'] as String,
       description: data['description'] as String?,
       startTime: DateTime.parse(data['startTime'] as String),

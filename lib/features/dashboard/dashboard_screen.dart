@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_dimensions.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/helpers/responsive_helper.dart';
-import '../../shared/widgets/app_bottom_nav.dart';
 import '../../shared/providers/auth_provider.dart';
 import '../../shared/providers/event_provider.dart';
-import '../../shared/providers/task_provider.dart';
 import '../../domain/entities/event.dart';
-import '../../domain/entities/task_item.dart';
 import '../calendar/event_detail_screen.dart';
+import '../../shared/widgets/app_header.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -31,7 +28,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _weekStart = _getWeekStart(_selectedDate);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<EventProvider>().ensureLoaded();
-      context.read<TaskProvider>().ensureLoaded();
     });
   }
 
@@ -42,55 +38,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.marginMobile,
-                vertical: AppDimensions.sm,
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundColor: AppColors.surfaceContainer,
-                    child: const Icon(Icons.person_outline),
-                  ),
-                  const SizedBox(width: AppDimensions.sm + 4),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Chào buổi sáng,',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.onSurfaceVariant,
-                          ),
-                        ),
-                        Text(
-                          context.watch<AuthProvider>().user?.name ?? 'Alex',
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.notifications_outlined),
-                    color: AppColors.onSurfaceVariant,
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-            ),
+            const AppHeader(),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -117,34 +71,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           Navigator.of(context).pushNamed('/add_event');
         },
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add, color: AppColors.onPrimary),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: AppBottomNav(
-        currentIndex: 0,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              break;
-            case 1:
-              Navigator.of(context).pushReplacementNamed('/calendar');
-              break;
-            case 2:
-              Navigator.of(context).pushReplacementNamed('/tasks');
-              break;
-            case 3:
-              Navigator.of(context).pushReplacementNamed('/analytics');
-              break;
-            case 4:
-              Navigator.of(context).pushReplacementNamed('/settings');
-              break;
-          }
-        },
-      ),
     );
   }
 
@@ -160,22 +94,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Text(
                   'Tháng ${_selectedDate.month} năm ${_selectedDate.year}',
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed('/calendar');
                   },
-                  child: const Text(
+                  child: Text(
                     AppStrings.viewCalendar,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
@@ -187,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: 7,
-                separatorBuilder: (_, __) =>
+                separatorBuilder: (_, _) =>
                     const SizedBox(width: AppDimensions.sm + 4),
                 itemBuilder: (context, index) {
                   final date = _weekStart.add(Duration(days: index));
@@ -204,8 +138,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       width: 60,
                       decoration: BoxDecoration(
                         color: isToday
-                            ? AppColors.primaryContainer
-                            : AppColors.surfaceContainerLow,
+                            ? Theme.of(context).colorScheme.primaryContainer
+                            : Theme.of(context).colorScheme.surfaceContainerLow,
                         borderRadius:
                             BorderRadius.circular(AppDimensions.radiusXl),
                       ),
@@ -217,9 +151,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             style: TextStyle(
                               fontSize: 12,
                               color: isToday
-                                  ? AppColors.onPrimaryContainer
+                                  ? Theme.of(context).colorScheme.onPrimaryContainer
                                       .withValues(alpha: 0.8)
-                                  : AppColors.onSurfaceVariant,
+                                  : Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -229,8 +163,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: isToday
-                                  ? AppColors.onPrimaryContainer
-                                  : AppColors.onSurfaceVariant,
+                                  ? Theme.of(context).colorScheme.onPrimaryContainer
+                                  : Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                           if (eventsOnDay.isNotEmpty)
@@ -239,8 +173,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               height: 6,
                               decoration: BoxDecoration(
                                 color: isToday
-                                    ? AppColors.onPrimaryContainer
-                                    : AppColors.primary,
+                                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                                    : Theme.of(context).colorScheme.primary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -258,25 +192,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildProgressCard() {
-    return Consumer2<TaskProvider, EventProvider>(
-      builder: (context, taskProvider, eventProvider, _) {
-        final todayTasks = taskProvider.tasks.where((t) {
-          final date = t.dueDate ?? DateTime.now();
-          return date.year == _selectedDate.year &&
-              date.month == _selectedDate.month &&
-              date.day == _selectedDate.day;
-        }).toList();
+    return Consumer<EventProvider>(
+      builder: (context, eventProvider, _) {
         final todayEvents = eventProvider.getEventsOnDate(_selectedDate);
-        final total = todayTasks.length + todayEvents.length;
-        final completed = todayTasks.where((t) => t.isCompleted).length +
-            todayEvents.where((e) => e.isCompleted).length;
+        final total = todayEvents.length;
+        final completed = todayEvents.where((e) => e.isCompleted).length;
         final rate = total > 0 ? completed / total : 0.0;
         return Container(
           padding: const EdgeInsets.all(AppDimensions.lg),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLowest,
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-            border: Border.all(color: AppColors.surfaceContainer),
+            border: Border.all(color: Theme.of(context).colorScheme.surfaceContainer),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
@@ -291,38 +218,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       AppStrings.progressToday,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.xs),
-                    const Text(
+                    Text(
                       AppStrings.progressDesc,
                       style: TextStyle(
                         fontSize: 14,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: AppDimensions.sm),
                     Text.rich(
                       TextSpan(
                         text: '$completed ',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                         children: [
                           TextSpan(
                             text: 'trên $total công việc',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
-                              color: AppColors.onSurfaceVariant,
+                              color: Theme.of(context).colorScheme.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -343,17 +270,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: CircularProgressIndicator(
                         value: rate,
                         strokeWidth: 8,
-                        backgroundColor: AppColors.surfaceContainer,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                            AppColors.primary),
+                        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).colorScheme.primary),
                       ),
                     ),
                     Text(
                       '${(rate * 100).toInt()}%',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
                   ],
@@ -367,15 +294,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildPrioritySection() {
-    return Consumer<TaskProvider>(
-      builder: (context, taskProvider, _) {
-        final priorityTasks = taskProvider.tasks.where((t) {
-          if (t.isCompleted) return false;
-          if (t.quadrant != 0 && t.quadrant != 1) return false;
-          final date = t.dueDate ?? DateTime.now();
-          return date.year == _selectedDate.year &&
-              date.month == _selectedDate.month &&
-              date.day == _selectedDate.day;
+    return Consumer<EventProvider>(
+      builder: (context, eventProvider, _) {
+        final now = DateTime.now();
+        final in24h = now.add(const Duration(hours: 24));
+        // Priority events: not completed, starting within 24h or currently active
+        final priorityEvents = eventProvider.getEventsOnDate(_selectedDate).where((e) {
+          if (e.isCompleted) return false;
+          return (e.startTime.isAfter(now) && e.startTime.isBefore(in24h))
+              || (e.startTime.isBefore(now) && e.endTime.isAfter(now));
         }).take(3).toList();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,56 +310,53 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   AppStrings.priorityTasks,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.onSurface,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed('/tasks');
                   },
-                  child: const Text(
+                  child: Text(
                     AppStrings.viewAll,
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: AppDimensions.sm),
-            if (priorityTasks.isEmpty)
+            if (priorityEvents.isEmpty)
               Container(
                 padding: const EdgeInsets.all(AppDimensions.md),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow,
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
                 ),
-                child: const Text(
+                child: Text(
                   'Không có công việc ưu tiên nào trong ngày này.',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: AppColors.onSurfaceVariant),
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               )
             else
-              ...priorityTasks.map((task) => Padding(
+              ...priorityEvents.map((event) => Padding(
                     padding: const EdgeInsets.only(bottom: AppDimensions.sm),
-                    child: _buildTaskCard(
-                      task: task,
-                      title: task.title,
-                      badge: task.quadrant == 0 ? 'Làm ngay' : 'Lên lịch',
-                      icon: task.quadrant == 0 ? Icons.bolt : Icons.calendar_month,
-                      time: task.quadrant == 0 ? 'Khẩn cấp & Quan trọng' : 'Không khẩn cấp & Quan trọng',
-                      accentColor: task.quadrant == 0 ? AppColors.primary : AppColors.secondary,
-                      onToggle: () {
-                        context.read<TaskProvider>().toggleTaskComplete(task.id);
-                      },
+                    child: _buildPriorityEventCard(
+                      event: event,
+                      title: event.title,
+                      badge: event.startTime.isBefore(now) ? 'Đang diễn ra' : 'Sắp tới',
+                      icon: event.startTime.isBefore(now) ? Icons.bolt : Icons.calendar_month,
+                      time: '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
+                      accentColor: event.startTime.isBefore(now) ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.secondary,
                     ),
                   )),
           ],
@@ -441,23 +365,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  Widget _buildTaskCard({
-    required TaskItem task,
+  Widget _buildPriorityEventCard({
+    required Event event,
     required String title,
     required String badge,
     required IconData icon,
     required String time,
     required Color accentColor,
-    required VoidCallback onToggle,
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).pushNamed('/tasks');
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => EventDetailScreen(event: event),
+          ),
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLowest,
+          color: Theme.of(context).colorScheme.surfaceContainerLowest,
           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
           border: Border(left: BorderSide(color: accentColor, width: 4)),
           boxShadow: [
@@ -471,16 +398,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Row(
           children: [
             GestureDetector(
-              onTap: onToggle,
+              onTap: () {
+                context.read<EventProvider>().toggleEventComplete(event.id);
+              },
               child: Container(
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: task.isCompleted ? accentColor : Colors.transparent,
+                  color: event.isCompleted ? accentColor : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXs),
                   border: Border.all(color: accentColor),
                 ),
-                child: task.isCompleted
+                child: event.isCompleted
                     ? const Icon(Icons.check, size: 16, color: Colors.white)
                     : null,
               ),
@@ -496,25 +425,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: task.isCompleted
-                          ? AppColors.onSurfaceVariant
-                          : AppColors.onSurface,
-                      decoration: task.isCompleted
+                      color: event.isCompleted
+                          ? Theme.of(context).colorScheme.onSurfaceVariant
+                          : Theme.of(context).colorScheme.onSurface,
+                      decoration: event.isCompleted
                           ? TextDecoration.lineThrough
                           : null,
                     ),
                   ),
-                  if (!task.isCompleted) ...[
+                  if (!event.isCompleted) ...[
                     const SizedBox(height: AppDimensions.xs),
                     Row(
                       children: [
-                        Icon(icon, size: 12, color: AppColors.onSurfaceVariant),
+                        Icon(icon, size: 12, color: Theme.of(context).colorScheme.onSurfaceVariant),
                         const SizedBox(width: 4),
                         Text(
                           time,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
-                            color: AppColors.onSurfaceVariant,
+                            color: Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -544,29 +473,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.play_circle_filled, size: 20, color: AppColors.primary),
+                  Icon(Icons.play_circle_filled, size: 20, color: Theme.of(context).colorScheme.primary),
                   const SizedBox(width: AppDimensions.sm),
-                  const Text(
+                  Text(
                     'Đang diễn ra',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                   const SizedBox(width: AppDimensions.sm),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                     ),
                     child: Text(
                       '${inProgress.length}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -598,41 +527,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         final dayEvents = eventProvider.getEventsOnDate(_selectedDate)
             .where((e) => e.startTime.isAfter(now))
             .toList();
+            
+        if (dayEvents.isEmpty) return const SizedBox.shrink();
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               AppStrings.upcomingEvents,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: AppColors.onSurface,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: AppDimensions.sm),
-            if (dayEvents.isEmpty)
-              Container(
-                padding: const EdgeInsets.all(AppDimensions.md),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLow,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-                ),
-                child: const Text(
-                  'Không có sự kiện sắp tới.',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(color: AppColors.onSurfaceVariant),
-                ),
-              )
-            else
-              ...dayEvents.map((event) => Padding(
-                    padding: const EdgeInsets.only(bottom: AppDimensions.sm),
-                    child: _buildEventCard(
-                      event: event,
-                      month: DateFormat('MMM').format(event.startTime).toUpperCase(),
-                      day: '${event.startTime.day}',
-                      title: event.title,
-                      subtitle: '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
-                      accent: Color(event.colorHex),
+            ...dayEvents.map((event) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppDimensions.sm),
+                  child: _buildEventCard(
+                    event: event,
+                    month: DateFormat('MMM').format(event.startTime).toUpperCase(),
+                    day: '${event.startTime.day}',
+                    title: event.title,
+                    subtitle: '${DateFormat('HH:mm').format(event.startTime)} - ${DateFormat('HH:mm').format(event.endTime)}',
+                    accent: Color(event.colorHex),
                     ),
                   )),
           ],
@@ -656,29 +574,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.error_outline, size: 20, color: AppColors.error),
+                  Icon(Icons.error_outline, size: 20, color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: AppDimensions.sm),
-                  const Text(
+                  Text(
                     'Đã bỏ lỡ',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.error,
+                      color: Theme.of(context).colorScheme.error,
                     ),
                   ),
                   const SizedBox(width: AppDimensions.sm),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: AppColors.error.withValues(alpha: 0.1),
+                      color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(AppDimensions.radiusFull),
                     ),
                     child: Text(
                       '${missed.length}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.error,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ),
@@ -722,7 +640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Container(
         padding: const EdgeInsets.all(AppDimensions.md),
         decoration: BoxDecoration(
-          color: AppColors.surfaceContainerLow,
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
           borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
         ),
         child: Row(
@@ -735,9 +653,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: 20,
                 height: 20,
                 decoration: BoxDecoration(
-                  color: event.isCompleted ? AppColors.primary : Colors.transparent,
+                  color: event.isCompleted ? Theme.of(context).colorScheme.primary : Colors.transparent,
                   borderRadius: BorderRadius.circular(AppDimensions.radiusXs),
-                  border: Border.all(color: AppColors.primary),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary),
                 ),
                 child: event.isCompleted
                     ? const Icon(Icons.check, size: 14, color: Colors.white)
@@ -748,7 +666,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Container(
               width: 48,
               decoration: BoxDecoration(
-                color: AppColors.surfaceContainerLowest,
+                color: Theme.of(context).colorScheme.surfaceContainerLowest,
                 borderRadius:
                     BorderRadius.circular(AppDimensions.radiusMd),
               ),
@@ -766,10 +684,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   Text(
                     day,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -783,18 +701,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Text(
                     title,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.onSurface,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   Text(
                     subtitle,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.onSurfaceVariant,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],
@@ -802,7 +720,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
             Icon(
               Icons.chevron_right,
-              color: AppColors.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ],
         ),
@@ -831,9 +749,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.md),
           decoration: BoxDecoration(
-            color: AppColors.surfaceContainerLow,
+            color: Theme.of(context).colorScheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(AppDimensions.radiusXl),
-            border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
+            border: Border.all(color: Theme.of(context).colorScheme.error.withValues(alpha: 0.3)),
           ),
           child: Row(
             children: [
@@ -845,9 +763,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   width: 20,
                   height: 20,
                   decoration: BoxDecoration(
-                    color: event.isCompleted ? AppColors.primary : Colors.transparent,
+                    color: event.isCompleted ? Theme.of(context).colorScheme.primary : Colors.transparent,
                     borderRadius: BorderRadius.circular(AppDimensions.radiusXs),
-                    border: Border.all(color: AppColors.primary),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary),
                   ),
                   child: event.isCompleted
                       ? const Icon(Icons.check, size: 14, color: Colors.white)
@@ -858,7 +776,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Container(
                 width: 48,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerLowest,
+                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
                   borderRadius:
                       BorderRadius.circular(AppDimensions.radiusMd),
                 ),
@@ -876,10 +794,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     Text(
                       day,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
                     ),
                   ],
@@ -893,19 +811,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Text(
                       title,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.onSurfaceVariant,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ),
                     Text(
                       subtitle,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.error,
+                        color: Theme.of(context).colorScheme.error,
                       ),
                     ),
                   ],
@@ -915,10 +833,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 onTap: () {
                   context.read<EventProvider>().toggleEventComplete(event.id);
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.access_time_filled,
                   size: 16,
-                  color: AppColors.error,
+                  color: Theme.of(context).colorScheme.error,
                 ),
               ),
             ],
